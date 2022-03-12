@@ -21,5 +21,7 @@ Route::group([
 
     /** 拓客码选项 **/
     $router->resource('tuo-options', 'TuokecmaOptionController');
+    /** 拓客码 **/
+    $router->resource('tuo', 'TuokemaController');
 
 });

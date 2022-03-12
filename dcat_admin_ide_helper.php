@@ -36,26 +36,45 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection password
      * @property Grid\Column|Collection avatar
      * @property Grid\Column|Collection remember_token
-     * @property Grid\Column|Collection image
-     * @property Grid\Column|Collection published_at
-     * @property Grid\Column|Collection content
-     * @property Grid\Column|Collection files
-     * @property Grid\Column|Collection status
-     * @property Grid\Column|Collection company_admin_user_id
-     * @property Grid\Column|Collection area
-     * @property Grid\Column|Collection nation
-     * @property Grid\Column|Collection industry
-     * @property Grid\Column|Collection capital
-     * @property Grid\Column|Collection staff
-     * @property Grid\Column|Collection contact
-     * @property Grid\Column|Collection telephone
-     * @property Grid\Column|Collection address
-     * @property Grid\Column|Collection license
+     * @property Grid\Column|Collection admin_role_id
+     * @property Grid\Column|Collection is_web_super
+     * @property Grid\Column|Collection web_id
+     * @property Grid\Column|Collection web_name
+     * @property Grid\Column|Collection area_id
+     * @property Grid\Column|Collection part_id
      * @property Grid\Column|Collection connection
      * @property Grid\Column|Collection queue
      * @property Grid\Column|Collection payload
      * @property Grid\Column|Collection exception
      * @property Grid\Column|Collection failed_at
+     * @property Grid\Column|Collection excel_user_name
+     * @property Grid\Column|Collection excel_user_id
+     * @property Grid\Column|Collection mobile
+     * @property Grid\Column|Collection talk_time
+     * @property Grid\Column|Collection record_url
+     * @property Grid\Column|Collection table_name
+     * @property Grid\Column|Collection banner
+     * @property Grid\Column|Collection code_bg_img
+     * @property Grid\Column|Collection bak
+     * @property Grid\Column|Collection option_id
+     * @property Grid\Column|Collection scan_to_url
+     * @property Grid\Column|Collection qcode_pic
+     * @property Grid\Column|Collection qcode_pic_has_bg
+     * @property Grid\Column|Collection master_id
+     * @property Grid\Column|Collection company_name
+     * @property Grid\Column|Collection user_name
+     * @property Grid\Column|Collection status
+     * @property Grid\Column|Collection call_no
+     * @property Grid\Column|Collection master_Id
+     * @property Grid\Column|Collection wechat
+     * @property Grid\Column|Collection qq
+     * @property Grid\Column|Collection content
+     * @property Grid\Column|Collection part_user_id
+     * @property Grid\Column|Collection rolling
+     * @property Grid\Column|Collection valid_phone
+     * @property Grid\Column|Collection protect_day
+     * @property Grid\Column|Collection protect_week
+     * @property Grid\Column|Collection protect_month
      * @property Grid\Column|Collection email
      * @property Grid\Column|Collection token
      * @property Grid\Column|Collection email_verified_at
@@ -85,26 +104,45 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection password(string $label = null)
      * @method Grid\Column|Collection avatar(string $label = null)
      * @method Grid\Column|Collection remember_token(string $label = null)
-     * @method Grid\Column|Collection image(string $label = null)
-     * @method Grid\Column|Collection published_at(string $label = null)
-     * @method Grid\Column|Collection content(string $label = null)
-     * @method Grid\Column|Collection files(string $label = null)
-     * @method Grid\Column|Collection status(string $label = null)
-     * @method Grid\Column|Collection company_admin_user_id(string $label = null)
-     * @method Grid\Column|Collection area(string $label = null)
-     * @method Grid\Column|Collection nation(string $label = null)
-     * @method Grid\Column|Collection industry(string $label = null)
-     * @method Grid\Column|Collection capital(string $label = null)
-     * @method Grid\Column|Collection staff(string $label = null)
-     * @method Grid\Column|Collection contact(string $label = null)
-     * @method Grid\Column|Collection telephone(string $label = null)
-     * @method Grid\Column|Collection address(string $label = null)
-     * @method Grid\Column|Collection license(string $label = null)
+     * @method Grid\Column|Collection admin_role_id(string $label = null)
+     * @method Grid\Column|Collection is_web_super(string $label = null)
+     * @method Grid\Column|Collection web_id(string $label = null)
+     * @method Grid\Column|Collection web_name(string $label = null)
+     * @method Grid\Column|Collection area_id(string $label = null)
+     * @method Grid\Column|Collection part_id(string $label = null)
      * @method Grid\Column|Collection connection(string $label = null)
      * @method Grid\Column|Collection queue(string $label = null)
      * @method Grid\Column|Collection payload(string $label = null)
      * @method Grid\Column|Collection exception(string $label = null)
      * @method Grid\Column|Collection failed_at(string $label = null)
+     * @method Grid\Column|Collection excel_user_name(string $label = null)
+     * @method Grid\Column|Collection excel_user_id(string $label = null)
+     * @method Grid\Column|Collection mobile(string $label = null)
+     * @method Grid\Column|Collection talk_time(string $label = null)
+     * @method Grid\Column|Collection record_url(string $label = null)
+     * @method Grid\Column|Collection table_name(string $label = null)
+     * @method Grid\Column|Collection banner(string $label = null)
+     * @method Grid\Column|Collection code_bg_img(string $label = null)
+     * @method Grid\Column|Collection bak(string $label = null)
+     * @method Grid\Column|Collection option_id(string $label = null)
+     * @method Grid\Column|Collection scan_to_url(string $label = null)
+     * @method Grid\Column|Collection qcode_pic(string $label = null)
+     * @method Grid\Column|Collection qcode_pic_has_bg(string $label = null)
+     * @method Grid\Column|Collection master_id(string $label = null)
+     * @method Grid\Column|Collection company_name(string $label = null)
+     * @method Grid\Column|Collection user_name(string $label = null)
+     * @method Grid\Column|Collection status(string $label = null)
+     * @method Grid\Column|Collection call_no(string $label = null)
+     * @method Grid\Column|Collection master_Id(string $label = null)
+     * @method Grid\Column|Collection wechat(string $label = null)
+     * @method Grid\Column|Collection qq(string $label = null)
+     * @method Grid\Column|Collection content(string $label = null)
+     * @method Grid\Column|Collection part_user_id(string $label = null)
+     * @method Grid\Column|Collection rolling(string $label = null)
+     * @method Grid\Column|Collection valid_phone(string $label = null)
+     * @method Grid\Column|Collection protect_day(string $label = null)
+     * @method Grid\Column|Collection protect_week(string $label = null)
+     * @method Grid\Column|Collection protect_month(string $label = null)
      * @method Grid\Column|Collection email(string $label = null)
      * @method Grid\Column|Collection token(string $label = null)
      * @method Grid\Column|Collection email_verified_at(string $label = null)
@@ -139,26 +177,45 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection password
      * @property Show\Field|Collection avatar
      * @property Show\Field|Collection remember_token
-     * @property Show\Field|Collection image
-     * @property Show\Field|Collection published_at
-     * @property Show\Field|Collection content
-     * @property Show\Field|Collection files
-     * @property Show\Field|Collection status
-     * @property Show\Field|Collection company_admin_user_id
-     * @property Show\Field|Collection area
-     * @property Show\Field|Collection nation
-     * @property Show\Field|Collection industry
-     * @property Show\Field|Collection capital
-     * @property Show\Field|Collection staff
-     * @property Show\Field|Collection contact
-     * @property Show\Field|Collection telephone
-     * @property Show\Field|Collection address
-     * @property Show\Field|Collection license
+     * @property Show\Field|Collection admin_role_id
+     * @property Show\Field|Collection is_web_super
+     * @property Show\Field|Collection web_id
+     * @property Show\Field|Collection web_name
+     * @property Show\Field|Collection area_id
+     * @property Show\Field|Collection part_id
      * @property Show\Field|Collection connection
      * @property Show\Field|Collection queue
      * @property Show\Field|Collection payload
      * @property Show\Field|Collection exception
      * @property Show\Field|Collection failed_at
+     * @property Show\Field|Collection excel_user_name
+     * @property Show\Field|Collection excel_user_id
+     * @property Show\Field|Collection mobile
+     * @property Show\Field|Collection talk_time
+     * @property Show\Field|Collection record_url
+     * @property Show\Field|Collection table_name
+     * @property Show\Field|Collection banner
+     * @property Show\Field|Collection code_bg_img
+     * @property Show\Field|Collection bak
+     * @property Show\Field|Collection option_id
+     * @property Show\Field|Collection scan_to_url
+     * @property Show\Field|Collection qcode_pic
+     * @property Show\Field|Collection qcode_pic_has_bg
+     * @property Show\Field|Collection master_id
+     * @property Show\Field|Collection company_name
+     * @property Show\Field|Collection user_name
+     * @property Show\Field|Collection status
+     * @property Show\Field|Collection call_no
+     * @property Show\Field|Collection master_Id
+     * @property Show\Field|Collection wechat
+     * @property Show\Field|Collection qq
+     * @property Show\Field|Collection content
+     * @property Show\Field|Collection part_user_id
+     * @property Show\Field|Collection rolling
+     * @property Show\Field|Collection valid_phone
+     * @property Show\Field|Collection protect_day
+     * @property Show\Field|Collection protect_week
+     * @property Show\Field|Collection protect_month
      * @property Show\Field|Collection email
      * @property Show\Field|Collection token
      * @property Show\Field|Collection email_verified_at
@@ -188,26 +245,45 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection password(string $label = null)
      * @method Show\Field|Collection avatar(string $label = null)
      * @method Show\Field|Collection remember_token(string $label = null)
-     * @method Show\Field|Collection image(string $label = null)
-     * @method Show\Field|Collection published_at(string $label = null)
-     * @method Show\Field|Collection content(string $label = null)
-     * @method Show\Field|Collection files(string $label = null)
-     * @method Show\Field|Collection status(string $label = null)
-     * @method Show\Field|Collection company_admin_user_id(string $label = null)
-     * @method Show\Field|Collection area(string $label = null)
-     * @method Show\Field|Collection nation(string $label = null)
-     * @method Show\Field|Collection industry(string $label = null)
-     * @method Show\Field|Collection capital(string $label = null)
-     * @method Show\Field|Collection staff(string $label = null)
-     * @method Show\Field|Collection contact(string $label = null)
-     * @method Show\Field|Collection telephone(string $label = null)
-     * @method Show\Field|Collection address(string $label = null)
-     * @method Show\Field|Collection license(string $label = null)
+     * @method Show\Field|Collection admin_role_id(string $label = null)
+     * @method Show\Field|Collection is_web_super(string $label = null)
+     * @method Show\Field|Collection web_id(string $label = null)
+     * @method Show\Field|Collection web_name(string $label = null)
+     * @method Show\Field|Collection area_id(string $label = null)
+     * @method Show\Field|Collection part_id(string $label = null)
      * @method Show\Field|Collection connection(string $label = null)
      * @method Show\Field|Collection queue(string $label = null)
      * @method Show\Field|Collection payload(string $label = null)
      * @method Show\Field|Collection exception(string $label = null)
      * @method Show\Field|Collection failed_at(string $label = null)
+     * @method Show\Field|Collection excel_user_name(string $label = null)
+     * @method Show\Field|Collection excel_user_id(string $label = null)
+     * @method Show\Field|Collection mobile(string $label = null)
+     * @method Show\Field|Collection talk_time(string $label = null)
+     * @method Show\Field|Collection record_url(string $label = null)
+     * @method Show\Field|Collection table_name(string $label = null)
+     * @method Show\Field|Collection banner(string $label = null)
+     * @method Show\Field|Collection code_bg_img(string $label = null)
+     * @method Show\Field|Collection bak(string $label = null)
+     * @method Show\Field|Collection option_id(string $label = null)
+     * @method Show\Field|Collection scan_to_url(string $label = null)
+     * @method Show\Field|Collection qcode_pic(string $label = null)
+     * @method Show\Field|Collection qcode_pic_has_bg(string $label = null)
+     * @method Show\Field|Collection master_id(string $label = null)
+     * @method Show\Field|Collection company_name(string $label = null)
+     * @method Show\Field|Collection user_name(string $label = null)
+     * @method Show\Field|Collection status(string $label = null)
+     * @method Show\Field|Collection call_no(string $label = null)
+     * @method Show\Field|Collection master_Id(string $label = null)
+     * @method Show\Field|Collection wechat(string $label = null)
+     * @method Show\Field|Collection qq(string $label = null)
+     * @method Show\Field|Collection content(string $label = null)
+     * @method Show\Field|Collection part_user_id(string $label = null)
+     * @method Show\Field|Collection rolling(string $label = null)
+     * @method Show\Field|Collection valid_phone(string $label = null)
+     * @method Show\Field|Collection protect_day(string $label = null)
+     * @method Show\Field|Collection protect_week(string $label = null)
+     * @method Show\Field|Collection protect_month(string $label = null)
      * @method Show\Field|Collection email(string $label = null)
      * @method Show\Field|Collection token(string $label = null)
      * @method Show\Field|Collection email_verified_at(string $label = null)

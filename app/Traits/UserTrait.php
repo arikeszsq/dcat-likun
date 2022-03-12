@@ -8,28 +8,27 @@ trait UserTrait
 {
     public static function webId()
     {
-        return self::user() ? self::user()->web_id : null;
+        return self::user()->web_id;
     }
 
     public static function user()
     {
-//        return App::make('user');
         return Auth::guard('admin')->user();
     }
 
     public static function userId()
     {
-        return self::user() ? self::user()->id : null;
+        return self::user()->id;
     }
 
     public static function getAdminRole()
     {
-        return self::user() ? self::user()->admin_role_id : null;
+        return self::user()->admin_role_id;
     }
 
     public static function isSuperAdmin()
     {
-        $admin_role_id = Static::getAdminRole();
+        $admin_role_id = self::getAdminRole();
         if ($admin_role_id == 1) {
             return true;
         } else {
@@ -39,7 +38,7 @@ trait UserTrait
 
     public static function isWebAdmin()
     {
-        $admin_role_id = Static::getAdminRole();
+        $admin_role_id = self::getAdminRole();
         if ($admin_role_id == 2) {
             return true;
         } else {
@@ -49,7 +48,7 @@ trait UserTrait
 
     public static function isAdmin()
     {
-        $admin_role_id = Static::getAdminRole();
+        $admin_role_id = self::getAdminRole();
         if ($admin_role_id == 2 || $admin_role_id == 1) {
             return true;
         } else {

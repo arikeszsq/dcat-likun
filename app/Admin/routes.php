@@ -18,7 +18,9 @@ Route::group([
 
     $router->resource('companies','CompanyController');
 
-    /** 站点管理 **/
+    /** 站点管理员 **/
     $router->resource('webs', 'WebController');
+    /** 平台用户 **/
+    $router->resource('web-users', 'WebUserController');
 
 });

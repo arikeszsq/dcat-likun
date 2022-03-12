@@ -94,14 +94,24 @@ class WebController extends AdminController
                     $form->updated_at = date('Y-m-d H:i:s');
                 }
             });
-
-
+            
             $form->saved(function (Form $form) {
-                $user = Web::query()->orderBy('id', 'desc')->first();
-                $user_id = $user->id;
-//                $user_id = $form->model()->id;
-                DB::table('admin_role_users')->insert(['role_id' => 2, 'user_id' => $user_id, 'created_at' => date('Y-m-d H:i:s', time())]);
+
+                if ($form->isCreating()) {
+                    $newId = $form->getKey();
+                    if (!$newId) {
+                        return $form->error('数据保存失败');
+                    }
+                    DB::table('admin_role_users')->insert([
+                        'role_id' => 2,
+                        'user_id' => $newId,
+                        'created_at' => date('Y-m-d H:i:s', time()),
+                        'updated_at' => date('Y-m-d H:i:s', time()),
+                    ]);
+                    return;
+                }
             });
+
 
 
         });

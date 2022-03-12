@@ -75,12 +75,6 @@ class WebUserController extends AdminController
             $form->hidden('web_name');
 
             $form->saving(function (Form $form) {
-                $user_name = $form->username;
-                $admin_exsit = Web::query()->where('username', $user_name)->first();
-                if ($admin_exsit) {
-                    admin_toastr('用户名已存在，请换一个新的用户名', 'error');
-                    return admin_redirect('web-users');
-                }
                 if ($form->password && $form->model()->password != $form->password) {
                     $form->password = bcrypt($form->password);
                 }
@@ -88,8 +82,14 @@ class WebUserController extends AdminController
                     $form->deleteInput('password');
                 }
                 if ($form->isCreating()) {
+                    $user_name = $form->username;
+                    $admin_exsit = Web::query()->where('username', $user_name)->first();
+                    if ($admin_exsit) {
+                        admin_toastr('用户名已存在，请换一个新的用户名', 'error');
+                        return admin_redirect('web-users');
+                    }
+
                     $form->created_at = date('Y-m-d H:i:s', time());
-                    $form->updated_at = date('Y-m-d H:i:s', time());
                     $form->admin_role_id = 3;
                     $form->web_id = self::webId();
                     $form->is_web_super = 2;
@@ -99,16 +99,21 @@ class WebUserController extends AdminController
                 }
             });
 
-
             $form->saved(function (Form $form) {
-                $user = Web::query()->orderBy('id', 'desc')->first();
-                $user_id = $user->id;
-                DB::table('admin_role_users')->insert([
-                    'role_id' => 3,
-                    'user_id' => $user_id,
-                    'created_at' => date('Y-m-d H:i:s', time()),
-                    'updated_at' => date('Y-m-d H:i:s', time()),
-                ]);
+
+                if ($form->isCreating()) {
+                    $newId = $form->getKey();
+                    if (!$newId) {
+                        return $form->error('数据保存失败');
+                    }
+                    DB::table('admin_role_users')->insert([
+                        'role_id' => 3,
+                        'user_id' => $newId,
+                        'created_at' => date('Y-m-d H:i:s', time()),
+                        'updated_at' => date('Y-m-d H:i:s', time()),
+                    ]);
+                    return;
+                }
             });
 
 

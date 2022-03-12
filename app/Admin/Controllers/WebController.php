@@ -24,7 +24,6 @@ class WebController extends AdminController
      */
     protected function grid()
     {
-//        var_dump(static::userId());exit;
         return Grid::make(new Web(), function (Grid $grid) {
             $grid->model()->where('admin_role_id', 2);
             $grid->column('id')->sortable();
@@ -47,18 +46,13 @@ class WebController extends AdminController
     protected function form()
     {
         return Form::make(new Web(), function (Form $form) {
-
             $form->tools(function (Form\Tools $tools) {
-                // 去掉跳转详情页按钮
                 $tools->disableView();
             });
-
             $form->text('web_name', '站点名称');
             $form->text('username', '用户名');
             $form->text('name', '姓名');
             $form->image('avatar', '头像')->autoUpload();;
-
-
             $form->password('password', trans('admin.password'))
                 ->minLength(5)
                 ->maxLength(20)
@@ -69,37 +63,27 @@ class WebController extends AdminController
                     return $v;
                 });
             $form->password('password_confirmation', trans('admin.password_confirmation'))->same('password');
-
             $form->ignore(['password_confirmation', 'old_password']);
-
-
             $form->hidden('created_at');
             $form->hidden('updated_at');
             $form->hidden('admin_role_id');
             $form->hidden('web_id');
             $form->hidden('is_web_super');
             $form->hidden('updated_at');
-
             $form->saving(function (Form $form) {
-
                 $user_name = $form->username;
                 $admin_exsit = Web::query()->where('username', $user_name)->first();
                 if ($admin_exsit) {
                     admin_toastr('用户名已存在，请换一个新的用户名','error');
                     return admin_redirect('webs');
                 }
-
-
                 if ($form->password && $form->model()->password != $form->password) {
                     $form->password = bcrypt($form->password);
                 }
-
                 if (!$form->password) {
                     $form->deleteInput('password');
                 }
-
                 $max_web_id = Web::query()->max('web_id');
-
                 if ($form->isCreating()) {
                     $form->created_at = date('Y-m-d H:i:s');
                     $form->updated_at = date('Y-m-d H:i:s');

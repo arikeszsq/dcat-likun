@@ -18,4 +18,7 @@ Route::group([
 
     $router->resource('companies','CompanyController');
 
+    /** 站点管理 **/
+    $router->resource('webs', 'WebController');
+
 });

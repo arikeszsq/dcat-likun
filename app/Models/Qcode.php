@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use Encore\Admin\Facades\Admin;
+
+use App\Traits\UserTrait;
 use Illuminate\Database\Eloquent\Model;
-use DateTimeInterface;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Qcode extends Model
 {
+    use UserTrait;
+
     static public function qrcodeWithBg($url, $img = null, $x = null, $y = null)
     {
         if (!$img) {
@@ -26,7 +26,7 @@ class Qcode extends Model
         if (!file_exists(public_path($file))) {
             mkdir(public_path($file), 0777, true);
         }
-        $user_id = Admin::user()->id;
+        $user_id = self::userId();
         $path_all = $file . $user_id . '-' . time() . ".png";
         QrCode::format('png')->errorCorrection('L')
             ->size(200)->generate($url, public_path($path_all));
@@ -44,7 +44,7 @@ class Qcode extends Model
         if (!file_exists(public_path($file))) {
             mkdir(public_path($file), 0777, true);
         }
-        $user_id = Admin::user()->id;
+        $user_id = self::userId();
         $path = $file . $user_id . '-2-' . time() . ".png";
         QrCode::format('png')->errorCorrection('L')
             ->size(200)->generate($url, public_path($path));

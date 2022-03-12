@@ -23,5 +23,7 @@ Route::group([
     $router->resource('tuo-options', 'TuokecmaOptionController');
     /** 拓客码 **/
     $router->resource('tuo', 'TuokemaController');
+    /** 拓客客户管理 **/
+    $router->resource('tuo-users', 'UserTkController');
 
 });

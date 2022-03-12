@@ -14,7 +14,7 @@ class Qcode extends Model
     static public function qrcodeWithBg($url, $img = null, $x = null, $y = null)
     {
         if (!$img) {
-            $img = 'static/images/code_bg.png';
+            $img = 'static/img/code_bg.png';
         }
         if (!$x) {
             $x = 80;

@@ -100,7 +100,6 @@ class WebUserController extends AdminController
             });
 
             $form->saved(function (Form $form) {
-
                 if ($form->isCreating()) {
                     $newId = $form->getKey();
                     if (!$newId) {
@@ -115,8 +114,6 @@ class WebUserController extends AdminController
                     return;
                 }
             });
-
-
         });
     }
 }

@@ -49,10 +49,10 @@ class WebController extends AdminController
             $form->tools(function (Form\Tools $tools) {
                 $tools->disableView();
             });
-            $form->text('web_name', '站点名称');
-            $form->text('username', '用户名');
-            $form->text('name', '姓名');
-            $form->image('avatar', '头像')->autoUpload();;
+            $form->text('web_name', '站点名称')->required();
+            $form->text('username', '用户名')->required();
+            $form->text('name', '姓名')->required();
+            $form->image('avatar', '头像')->autoUpload();
             $form->password('password', trans('admin.password'))
                 ->minLength(5)
                 ->maxLength(20)
@@ -71,22 +71,22 @@ class WebController extends AdminController
             $form->hidden('is_web_super');
             $form->hidden('updated_at');
             $form->saving(function (Form $form) {
-                $user_name = $form->username;
-                $admin_exsit = Web::query()->where('username', $user_name)->first();
-                if ($admin_exsit) {
-                    admin_toastr('用户名已存在，请换一个新的用户名','error');
-                    return admin_redirect('webs');
-                }
                 if ($form->password && $form->model()->password != $form->password) {
                     $form->password = bcrypt($form->password);
                 }
                 if (!$form->password) {
                     $form->deleteInput('password');
                 }
-                $max_web_id = Web::query()->max('web_id');
                 if ($form->isCreating()) {
+                    $user_name = $form->username;
+                    $admin_exsit = Web::query()->where('username', $user_name)->first();
+                    if ($admin_exsit) {
+                        return $form->error('用户名已存在，请换一个新的用户名');
+//                    admin_toastr('用户名已存在，请换一个新的用户名','error');
+//                    return admin_redirect('webs');
+                    }
+                    $max_web_id = Web::query()->max('web_id');
                     $form->created_at = date('Y-m-d H:i:s');
-                    $form->updated_at = date('Y-m-d H:i:s');
                     $form->admin_role_id = 2;
                     $form->web_id = intval($max_web_id) + 1;
                     $form->is_web_super = 1;
@@ -94,7 +94,7 @@ class WebController extends AdminController
                     $form->updated_at = date('Y-m-d H:i:s');
                 }
             });
-            
+
             $form->saved(function (Form $form) {
 
                 if ($form->isCreating()) {
@@ -111,9 +111,6 @@ class WebController extends AdminController
                     return;
                 }
             });
-
-
-
         });
     }
 }

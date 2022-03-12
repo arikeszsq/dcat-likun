@@ -1,0 +1,153 @@
+.container_zong {
+    width: 30%;
+    padding: 2%;
+    background: #fff;
+    margin-left: 3%;
+}
+
+.container_sss h1 {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.container_sss .form-item {
+    margin: 16px 0;
+}
+
+.container_sss .txt,
+select {
+    outline: none;
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+select {
+    height: 100px;
+}
+
+ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+li {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.container_sss textarea.txt {
+    resize: none;
+    height: 100px;
+}
+
+.container_sss .txt:focus,
+select:focus {
+    border-color: #5589ef;
+}
+
+button {
+    outline: none;
+    border: none;
+    background: #5589ef;
+    color: #fff;
+    width: 150px;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #739cee;
+}
+
+button:disabled {
+    background: #c8d6f5;
+    cursor: not-allowed;
+}
+
+label {
+    cursor: pointer;
+}
+
+.captcha .txt {
+    width: 160px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.clearfix::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.container_sss .title {
+    margin-right: 20px;
+}
+
+.policy {
+    font-size: 12px;
+}
+
+.policy span {
+    vertical-align: 2px;
+}
+
+input ~ span {
+    color: #aaa;
+}
+
+input:checked ~ span {
+    color: #333;
+}
+
+.list_item {
+    margin-right: 3%;
+    max-height: 800px;
+    overflow: auto;
+    scroll-behavior: auto;
+    background: #fff;
+    width: 60%;
+}
+
+/*.list_item li:first-child {*/
+/*    background: #3c8dbc;*/
+/*    color: #fff;*/
+/*    line-height: 45px;*/
+/*    height: 45px;*/
+/*}*/
+
+.li_title{
+        background: #3c8dbc;
+        color: #fff;
+        line-height: 45px;
+        height: 45px;
+}
+
+.list_item li span {
+    text-align: center;
+    display: inline-block;
+    width: 25%;
+}
+
+.list_item li {
+
+    border-bottom: 1px solid #f1f1f1;
+    line-height: 35px;
+    height: 35px;
+}
+
+.button-list .btn{
+    margin-top: 5px;
+}

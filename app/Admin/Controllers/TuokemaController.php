@@ -24,7 +24,12 @@ class TuokemaController extends AdminController
     {
         return Grid::make(new Tuokema(), function (Grid $grid) {
 
-            $grid->disableActions();// 禁用行操作
+            // 禁用编辑按钮
+            $grid->disableEditButton();
+            // 禁用详情按钮
+            $grid->disableViewButton();
+            // 显示删除按钮
+            $grid->showDeleteButton();
 
             if (!self::isSuperAdmin()) {
                 $grid->model()->where('web_id', static::webId());
@@ -36,8 +41,8 @@ class TuokemaController extends AdminController
             $grid->column('id', __('Id'))->sortable();
 
             $grid->column('title', '标题');
-            $grid->column('qcode_pic', '进件二维码');
-            $grid->column('qcode_pic_has_bg', '进件二维码');
+            $grid->column('qcode_pic', '进件二维码')->image('',60,60);
+            $grid->column('qcode_pic_has_bg', '进件二维码')->image('',40,80);
             $grid->column('created_at', '创建时间');
 
             $grid->filter(function (Grid\Filter $filter) {
@@ -115,10 +120,11 @@ class TuokemaController extends AdminController
                     $option = TuokecmaOption::query()->find($option_id);
                     $bg_url = $option->code_bg_img;
 
-                    $form->model()->qcode_pic_has_bg = Qcode::qrcodeWithBg($url, $bg_url);
-                    $form->model()->qcode_pic = Qcode::qrcode($url);
-                    $form->model()->scan_to_url = $url;
-                    $form->model()->save();
+                    Tuokema::query()->where('id', $newId)->update([
+                        'qcode_pic_has_bg' => Qcode::qrcodeWithBg($url, $bg_url),
+                        'qcode_pic' => Qcode::qrcode($url),
+                        'scan_to_url' => $url,
+                    ]);
                 }
             });
         });

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AddUserCode;
-use App\Models\User;
-use App\Models\UserCodeOption;
-use App\Models\UserExcel;
+
+use App\Models\TuokecmaOption;
+use App\Models\Tuokema;
 use App\Models\UserTK;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +14,7 @@ use zgldh\QiniuStorage\QiniuStorage;
 
 class IndexController extends Controller
 {
+    use ResponseTrait;
 
     public function index(Request $request)
     {
@@ -21,18 +22,18 @@ class IndexController extends Controller
         $type = isset($inputs['type']) && $inputs['type'] ? $inputs['type'] : 1;
         if ($type == 1) {
             //拓客码
-            $id = isset($inputs['type']) && $inputs['type'] ? $inputs['type'] : 0;
+            $id = isset($inputs['id']) && $inputs['id'] ? $inputs['id'] : 0;
             $data = [
                 'image' => '/static/web/images/banner.png',
                 'web_id' => 1,
                 'master_id' => 1
             ];
             if ($id) {
-                $obj = AddUserCode::query()->where('id', $id)->first();
+                $obj = Tuokema::query()->find($id);
                 $master_id = $obj->user_id;
                 $web_id = $obj->web_id;
                 $option_id = $obj->option_id;
-                $option = UserCodeOption::query()->find($option_id);
+                $option = TuokecmaOption::query()->find($option_id);
                 $data = [
                     'image' => $option->banner ?? '/static/web/images/banner.png',
                     'web_id' => $web_id,
@@ -80,41 +81,41 @@ class IndexController extends Controller
         return view('result', ['msg' => '成功']);
     }
 
-    public function update(Request $request)
-    {
-        $inputs = $request->all();
-        $data = [
-            'company_tax_no' => $this->getKeyValue('company_tax_no', $inputs),
-            'money_need' => $this->getKeyValue('money_need', $inputs),
-            'legal_name' => $this->getKeyValue('legal_name', $inputs),
-            'legal_id_card' => $this->getKeyValue('legal_id_card', $inputs),
-            'legal_mobile' => $this->getKeyValue('legal_mobile', $inputs),
-            'legal_bank_no' => $this->getKeyValue('legal_bank_no', $inputs),
-            'bank' => $this->getKeyValue('bank', $inputs),
-            'legal_company' => $this->getKeyValue('legal_company', $inputs),
-            'legal_house' => $this->getKeyValue('legal_house', $inputs),
-            'edu' => $this->getKeyValue('edu', $inputs),
-            'marry' => $this->getKeyValue('marry', $inputs),
-            'marry_name' => $this->getKeyValue('marry_name', $inputs),
-            'marry_mobile' => $this->getKeyValue('marry_mobile', $inputs),
-            'marry_id_card' => $this->getKeyValue('marry_id_card', $inputs),
-            'marry_work_detail' => $this->getKeyValue('marry_work_detail', $inputs),
-            'pre_mobile' => $this->getKeyValue('pre_mobile', $inputs),
-            'relation_o' => $this->getKeyValue('relation_o', $inputs),
-            'relation_mob_o' => $this->getKeyValue('relation_mob_o', $inputs),
-            'relation_t' => $this->getKeyValue('relation_t', $inputs),
-            'relation_mob_t' => $this->getKeyValue('relation_mob_t', $inputs),
-            'cert_pic' => json_encode($this->getKeyValue('cert_pic', $inputs)),
-            'id_card_pic' => json_encode($this->getKeyValue('id_card_pic', $inputs))
-        ];
-        try {
-            $ret = User::query()->where('id', $inputs['id'])->update($data);
-            return self::success($ret);
-        } catch (\Exception $e) {
-            return self::error($e->getCode(), $e->getMessage());
-        }
-
-    }
+//    public function update(Request $request)
+//    {
+//        $inputs = $request->all();
+//        $data = [
+//            'company_tax_no' => $this->getKeyValue('company_tax_no', $inputs),
+//            'money_need' => $this->getKeyValue('money_need', $inputs),
+//            'legal_name' => $this->getKeyValue('legal_name', $inputs),
+//            'legal_id_card' => $this->getKeyValue('legal_id_card', $inputs),
+//            'legal_mobile' => $this->getKeyValue('legal_mobile', $inputs),
+//            'legal_bank_no' => $this->getKeyValue('legal_bank_no', $inputs),
+//            'bank' => $this->getKeyValue('bank', $inputs),
+//            'legal_company' => $this->getKeyValue('legal_company', $inputs),
+//            'legal_house' => $this->getKeyValue('legal_house', $inputs),
+//            'edu' => $this->getKeyValue('edu', $inputs),
+//            'marry' => $this->getKeyValue('marry', $inputs),
+//            'marry_name' => $this->getKeyValue('marry_name', $inputs),
+//            'marry_mobile' => $this->getKeyValue('marry_mobile', $inputs),
+//            'marry_id_card' => $this->getKeyValue('marry_id_card', $inputs),
+//            'marry_work_detail' => $this->getKeyValue('marry_work_detail', $inputs),
+//            'pre_mobile' => $this->getKeyValue('pre_mobile', $inputs),
+//            'relation_o' => $this->getKeyValue('relation_o', $inputs),
+//            'relation_mob_o' => $this->getKeyValue('relation_mob_o', $inputs),
+//            'relation_t' => $this->getKeyValue('relation_t', $inputs),
+//            'relation_mob_t' => $this->getKeyValue('relation_mob_t', $inputs),
+//            'cert_pic' => json_encode($this->getKeyValue('cert_pic', $inputs)),
+//            'id_card_pic' => json_encode($this->getKeyValue('id_card_pic', $inputs))
+//        ];
+//        try {
+//            $ret = User::query()->where('id', $inputs['id'])->update($data);
+//            return self::success($ret);
+//        } catch (\Exception $e) {
+//            return self::error($e->getCode(), $e->getMessage());
+//        }
+//
+//    }
 
     function getKeyValue($key, $inputs)
     {
@@ -163,9 +164,6 @@ class IndexController extends Controller
         Log::info(date('Y-m-d H:i:s', time()));
 
 
-
-
-
 //
 //        var_dump($_FILES);
 //        var_dump($_POST);
@@ -185,7 +183,6 @@ class IndexController extends Controller
 //        }
 //        return '上传失败';
     }
-
 
 
 }

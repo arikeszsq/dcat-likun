@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Grid\AssignUser;
 use App\Models\JfUserExcel;
 use App\Traits\UserTrait;
 use Dcat\Admin\Form;
@@ -41,6 +42,11 @@ class JfUserExcelController extends AdminController
                 $filter->equal('id');
 
             });
+
+            $grid->batchActions([
+                new AssignUser()
+            ]);
+
         });
     }
 

@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Grid\AssignUser;
+use App\Admin\Extensions\CheckRow;
 use App\Models\JfUserExcel;
 use App\Traits\UserTrait;
 use Dcat\Admin\Form;
@@ -46,6 +47,10 @@ class JfUserExcelController extends AdminController
             $grid->batchActions([
                 new AssignUser()
             ]);
+
+            $grid->actions(function ($actions) {
+                $actions->append(new CheckRow($actions->row,'jf_user_intention'));
+            });
 
         });
     }

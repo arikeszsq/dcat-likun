@@ -42,6 +42,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection web_name
      * @property Grid\Column|Collection area_id
      * @property Grid\Column|Collection part_id
+     * @property Grid\Column|Collection job_role_id
      * @property Grid\Column|Collection connection
      * @property Grid\Column|Collection queue
      * @property Grid\Column|Collection payload
@@ -110,6 +111,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection web_name(string $label = null)
      * @method Grid\Column|Collection area_id(string $label = null)
      * @method Grid\Column|Collection part_id(string $label = null)
+     * @method Grid\Column|Collection job_role_id(string $label = null)
      * @method Grid\Column|Collection connection(string $label = null)
      * @method Grid\Column|Collection queue(string $label = null)
      * @method Grid\Column|Collection payload(string $label = null)
@@ -183,6 +185,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection web_name
      * @property Show\Field|Collection area_id
      * @property Show\Field|Collection part_id
+     * @property Show\Field|Collection job_role_id
      * @property Show\Field|Collection connection
      * @property Show\Field|Collection queue
      * @property Show\Field|Collection payload
@@ -251,6 +254,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection web_name(string $label = null)
      * @method Show\Field|Collection area_id(string $label = null)
      * @method Show\Field|Collection part_id(string $label = null)
+     * @method Show\Field|Collection job_role_id(string $label = null)
      * @method Show\Field|Collection connection(string $label = null)
      * @method Show\Field|Collection queue(string $label = null)
      * @method Show\Field|Collection payload(string $label = null)

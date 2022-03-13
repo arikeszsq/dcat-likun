@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\JfUserExcel;
+use App\Traits\UserTrait;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -10,6 +11,7 @@ use Dcat\Admin\Http\Controllers\AdminController;
 
 class JfUserExcelController extends AdminController
 {
+    use UserTrait;
     /**
      * Make a grid builder.
      *
@@ -18,21 +20,23 @@ class JfUserExcelController extends AdminController
     protected function grid()
     {
         return Grid::make(new JfUserExcel(), function (Grid $grid) {
-            $grid->column('id')->sortable();
-            $grid->column('web_id');
-            $grid->column('user_id');
-            $grid->column('master_id');
-            $grid->column('company_name');
-            $grid->column('user_name');
-            $grid->column('mobile');
-            $grid->column('status');
-            $grid->column('call_no');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-        
+
+            if (!self::isSuperAdmin()) {
+                $grid->model()->where('web_id', static::webId());
+                if (!self::isWebAdmin()) {
+                    $grid->model()->where('master_id', static::userId());
+                }
+            }
+            $grid->model()->orderBy('id', 'desc');
+            $grid->column('id', __('Id'))->sortable();
+
+            $grid->column('user_name','姓名');
+            $grid->column('mobile','手机号');
+            $grid->column('company_name','公司名称');
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
-        
+
             });
         });
     }
@@ -48,12 +52,10 @@ class JfUserExcelController extends AdminController
     {
         return Show::make($id, new JfUserExcel(), function (Show $show) {
             $show->field('id');
-            $show->field('web_id');
-            $show->field('user_id');
-            $show->field('master_id');
-            $show->field('company_name');
-            $show->field('user_name');
-            $show->field('mobile');
+            $show->field('user_name','姓名');
+            $show->field('mobile','手机号');
+            $show->field('company_name','公司名称');
+
             $show->field('status');
             $show->field('call_no');
             $show->field('created_at');
@@ -70,17 +72,25 @@ class JfUserExcelController extends AdminController
     {
         return Form::make(new JfUserExcel(), function (Form $form) {
             $form->display('id');
-            $form->text('web_id');
-            $form->text('user_id');
-            $form->text('master_id');
             $form->text('company_name');
             $form->text('user_name');
             $form->text('mobile');
             $form->text('status');
             $form->text('call_no');
-        
-            $form->display('created_at');
-            $form->display('updated_at');
+
+            $form->hidden('created_at');
+            $form->hidden('updated_at');
+            $form->hidden('web_id');
+            $form->hidden('user_id');
+            $form->saving(function (Form $form) {
+                if ($form->isCreating()) {
+                    $form->created_at = date('Y-m-d H:i:s');
+                    $form->web_id = self::webId();
+                    $form->user_id = self::userId();
+                } else {
+                    $form->updated_at = date('Y-m-d H:i:s');
+                }
+            });
         });
     }
 }

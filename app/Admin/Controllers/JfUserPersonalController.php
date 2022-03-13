@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\JfUserPersonal;
+use App\Traits\UserTrait;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -10,6 +11,9 @@ use Dcat\Admin\Http\Controllers\AdminController;
 
 class JfUserPersonalController extends AdminController
 {
+
+    use UserTrait;
+
     /**
      * Make a grid builder.
      *
@@ -18,18 +22,24 @@ class JfUserPersonalController extends AdminController
     protected function grid()
     {
         return Grid::make(new JfUserPersonal(), function (Grid $grid) {
-            $grid->column('id')->sortable();
-            $grid->column('web_id');
-            $grid->column('user_name');
-            $grid->column('mobile');
-            $grid->column('company_name');
-            $grid->column('content');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-        
+
+            if (!self::isSuperAdmin()) {
+                $grid->model()->where('web_id', static::webId());
+                if (!self::isWebAdmin()) {
+                    $grid->model()->where('master_id', static::userId());
+                }
+            }
+            $grid->model()->orderBy('id', 'desc');
+            $grid->column('id', __('Id'))->sortable();
+
+            $grid->column('user_name','姓名');
+            $grid->column('mobile','手机号');
+            $grid->column('company_name','公司名称');
+
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
-        
+
             });
         });
     }
@@ -45,10 +55,10 @@ class JfUserPersonalController extends AdminController
     {
         return Show::make($id, new JfUserPersonal(), function (Show $show) {
             $show->field('id');
-            $show->field('web_id');
-            $show->field('user_name');
-            $show->field('mobile');
-            $show->field('company_name');
+            $show->field('user_name','姓名');
+            $show->field('mobile','手机号');
+            $show->field('company_name','公司名称');
+
             $show->field('content');
             $show->field('created_at');
             $show->field('updated_at');
@@ -64,14 +74,24 @@ class JfUserPersonalController extends AdminController
     {
         return Form::make(new JfUserPersonal(), function (Form $form) {
             $form->display('id');
-            $form->text('web_id');
             $form->text('user_name');
             $form->text('mobile');
             $form->text('company_name');
             $form->text('content');
-        
-            $form->display('created_at');
-            $form->display('updated_at');
+
+            $form->hidden('created_at');
+            $form->hidden('updated_at');
+            $form->hidden('web_id');
+            $form->hidden('user_id');
+            $form->saving(function (Form $form) {
+                if ($form->isCreating()) {
+                    $form->created_at = date('Y-m-d H:i:s');
+                    $form->web_id = self::webId();
+                    $form->user_id = self::userId();
+                } else {
+                    $form->updated_at = date('Y-m-d H:i:s');
+                }
+            });
         });
     }
 }

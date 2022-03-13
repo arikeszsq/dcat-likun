@@ -81,7 +81,8 @@ class WebController extends AdminController
                     $user_name = $form->username;
                     $admin_exsit = Web::query()->where('username', $user_name)->first();
                     if ($admin_exsit) {
-                        return $form->error('用户名已存在，请换一个新的用户名');
+                        return $form->response()->alert(true)->error('用户名已存在，请换一个新的用户名');
+//                        return $form->error('用户名已存在，请换一个新的用户名');
 //                    admin_toastr('用户名已存在，请换一个新的用户名','error');
 //                    return admin_redirect('webs');
                     }

@@ -35,10 +35,10 @@ app('view')->prependNamespace('admin', resource_path('views/admin'));
 //初始化grid参数
 Grid::resolving(function (Grid $grid) {
     $grid->toolsWithOutline(false);
-    $grid->disableBatchActions();
+//    $grid->disableBatchActions();
     $grid->disableQuickEditButton();
-    $grid->disableRowSelector();
-    $grid->disableDeleteButton();
+//    $grid->disableRowSelector();
+//    $grid->disableDeleteButton();
 });
 
 //初始化form参数

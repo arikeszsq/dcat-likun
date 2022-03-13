@@ -7,8 +7,8 @@ use Dcat\Admin\Admin;
 Admin::routes();
 
 Route::group([
-    'prefix'     => config('admin.route.prefix'),
-    'namespace'  => config('admin.route.namespace'),
+    'prefix' => config('admin.route.prefix'),
+    'namespace' => config('admin.route.namespace'),
     'middleware' => config('admin.route.middleware'),
 ], function (Router $router) {
 
@@ -52,5 +52,9 @@ Route::group([
     $router->resource('user-no-answer', 'JfUserNoAnswerController');
 
 
+    /** 以下接口 ，记得 1.需要去系统添加权限 2.需要在middleware添加白名单 **/
+    Route::any('/add-intention', 'ApiController@addIntentionUser');
+    Route::any('/call-back', 'ApiController@addUserCallRB');
+    Route::any('/add-call-record', 'ApiController@addUserCallRecord');
 
 });

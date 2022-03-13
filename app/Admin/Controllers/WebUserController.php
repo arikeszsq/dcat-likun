@@ -3,7 +3,10 @@
 namespace App\Admin\Controllers;
 
 
+use App\Models\Area;
+use App\Models\Part;
 use App\Models\Web;
+use App\Models\WebBasicSetting;
 use App\Traits\UserTrait;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -54,7 +57,18 @@ class WebUserController extends AdminController
             });
             $form->text('username', '用户名');
             $form->text('name', '姓名');
-            $form->image('avatar', '头像')->autoUpload();;
+            $form->image('avatar', '头像')->autoUpload();
+
+
+            $roles = WebBasicSetting::getJobRoleArray(WebBasicSetting::Static_职位选项);
+            $areas = Area::getAreaArray();
+            $parts = Part::getPartArray();
+
+            $form->select('job_role_id', '职位身份')->options($roles)->required();
+            $form->select('area_id', '大区')->options($areas)->required();
+            $form->select('part_id', '部门')->options($parts)->required();
+
+
             $form->password('password', trans('admin.password'))
                 ->minLength(5)
                 ->maxLength(20)

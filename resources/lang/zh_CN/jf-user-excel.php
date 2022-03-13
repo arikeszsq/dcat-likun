@@ -3,6 +3,7 @@ return [
     'labels' => [
         'JfUserExcel' => '导入资源',
         'jf-user-excel' => '导入资源',
+        'user-excels' => '导入资源',
     ],
     'fields' => [
         'web_id' => '站点id',

@@ -3,6 +3,7 @@ return [
     'labels' => [
         'JfUserIntention' => '意向客户',
         'jf-user-intention' => '意向客户',
+        'user-intentions' => '意向客户',
     ],
     'fields' => [
         'web_id' => '站点id',

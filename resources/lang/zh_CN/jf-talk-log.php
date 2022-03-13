@@ -3,6 +3,7 @@ return [
     'labels' => [
         'JfTalkLog' => '通话记录',
         'jf-talk-log' => '通话记录',
+        'user-talk-logs' => '通话记录',
     ],
     'fields' => [
         'web_id' => 'web_id',

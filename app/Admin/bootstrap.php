@@ -36,7 +36,7 @@ app('view')->prependNamespace('admin', resource_path('views/admin'));
 Grid::resolving(function (Grid $grid) {
     $grid->toolsWithOutline(false);
 //    $grid->disableBatchActions();
-    $grid->disableQuickEditButton();
+//    $grid->disableQuickEditButton();
 //    $grid->disableRowSelector();
 //    $grid->disableDeleteButton();
 });

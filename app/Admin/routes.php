@@ -26,6 +26,8 @@ Route::group([
     $router->resource('parts', 'PartController');
     /** 平台标签管理 **/
     $router->resource('tags', 'TagController');
+    /** 基础配置 **/
+    $router->resource('web-setting', 'WebSettingController');
 
 
 

@@ -40,7 +40,6 @@ class JfTalkLogController extends AdminController
 
             $grid->column('mobile','手机号');
             $grid->column('talk_time','通话时长（秒）');
-            $grid->column('record_url','录音文件')->link();
             $grid->column('created_at','通话时间');
 
             $grid->filter(function (Grid\Filter $filter) {

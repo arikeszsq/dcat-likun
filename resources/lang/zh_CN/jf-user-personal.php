@@ -1,8 +1,8 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'JfUserPersonal' => 'JfUserPersonal',
-        'jf-user-personal' => 'JfUserPersonal',
+        'JfUserPersonal' => '个人资源',
+        'jf-user-personal' => '个人资源',
     ],
     'fields' => [
         'web_id' => 'web_id',

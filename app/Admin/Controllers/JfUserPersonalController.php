@@ -14,6 +14,8 @@ class JfUserPersonalController extends AdminController
 
     use UserTrait;
 
+    public $title='个人资源';
+
     /**
      * Make a grid builder.
      *

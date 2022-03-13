@@ -1,8 +1,8 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'JfUserNoAnswer' => 'JfUserNoAnswer',
-        'jf-user-no-answer' => 'JfUserNoAnswer',
+        'JfUserNoAnswer' => '未接通客户',
+        'jf-user-no-answer' => '未接通客户',
     ],
     'fields' => [
         'web_id' => 'web_id',

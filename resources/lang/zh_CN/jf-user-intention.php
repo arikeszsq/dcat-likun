@@ -1,8 +1,8 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'JfUserIntention' => 'JfUserIntention',
-        'jf-user-intention' => 'JfUserIntention',
+        'JfUserIntention' => '意向客户',
+        'jf-user-intention' => '意向客户',
     ],
     'fields' => [
         'web_id' => '站点id',

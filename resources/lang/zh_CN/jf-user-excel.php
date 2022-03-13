@@ -1,8 +1,8 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'JfUserExcel' => 'JfUserExcel',
-        'jf-user-excel' => 'JfUserExcel',
+        'JfUserExcel' => '导入资源',
+        'jf-user-excel' => '导入资源',
     ],
     'fields' => [
         'web_id' => '站点id',

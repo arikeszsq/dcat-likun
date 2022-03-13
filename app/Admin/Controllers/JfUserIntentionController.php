@@ -13,6 +13,8 @@ class JfUserIntentionController extends AdminController
 {
     use UserTrait;
 
+    public $title='意向客户';
+
     /**
      * Make a grid builder.
      *

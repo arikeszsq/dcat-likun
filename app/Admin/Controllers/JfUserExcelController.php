@@ -12,6 +12,9 @@ use Dcat\Admin\Http\Controllers\AdminController;
 class JfUserExcelController extends AdminController
 {
     use UserTrait;
+
+    public $title='资源';
+
     /**
      * Make a grid builder.
      *

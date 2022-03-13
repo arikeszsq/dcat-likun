@@ -13,6 +13,8 @@ class JfUserPublicController extends AdminController
 {
     use UserTrait;
 
+    public $title='公海';
+
     /**
      * Make a grid builder.
      *

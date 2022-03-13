@@ -14,6 +14,7 @@ class JfUserNoAnswerController extends AdminController
 
     use UserTrait;
 
+    public $title='未接通客户';
     /**
      * Make a grid builder.
      *

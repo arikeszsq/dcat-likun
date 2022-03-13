@@ -1,8 +1,8 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'JfUserPublic' => 'JfUserPublic',
-        'jf-user-public' => 'JfUserPublic',
+        'JfUserPublic' => '公海',
+        'jf-user-public' => '公海',
     ],
     'fields' => [
         'web_id' => 'web_id',

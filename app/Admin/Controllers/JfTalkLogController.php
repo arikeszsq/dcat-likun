@@ -12,6 +12,8 @@ use Dcat\Admin\Http\Controllers\AdminController;
 class JfTalkLogController extends AdminController
 {
     use UserTrait;
+
+    public $title='通话记录';
     /**
      * Make a grid builder.
      *

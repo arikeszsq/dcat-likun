@@ -99,8 +99,9 @@ class WebUserController extends AdminController
                     $user_name = $form->username;
                     $admin_exsit = Web::query()->where('username', $user_name)->first();
                     if ($admin_exsit) {
-                        admin_toastr('用户名已存在，请换一个新的用户名', 'error');
-                        return admin_redirect('web-users');
+                        return $form->response()->alert(true)->error('用户名已存在，请换一个新的用户名');
+//                        admin_toastr('用户名已存在，请换一个新的用户名', 'error');
+//                        return admin_redirect('web-users');
                     }
 
                     $form->created_at = date('Y-m-d H:i:s', time());

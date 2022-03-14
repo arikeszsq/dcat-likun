@@ -59,12 +59,9 @@
                                     <span class="nb_type" data-id="D">D类客户</span>
                                 </div>
                             </div>
-
-
                             <div class="form-item">
                                 <span>客户信息登记:</span>
                                 <textarea rows="3" class="gjkh_a" placeholder="请填写客户信息登记"></textarea></div>
-
                             <input type="hidden" id="stop_continue_call" value="0">
                         </form>
 
@@ -81,23 +78,19 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="button-list">
                             <button id="set_intention_user" class="btn btn-primary">转为意向客户</button>
                         </div>
-
                         <div class="container_zong biaoqian_a">
                             <div class="button-list">
                                 <button id="batch_call" class="btn btn-success">开始自动拨号</button>
                                 <button id="batch_hangup" class="btn btn-danger">停止自动拨号</button>
                                 <button id="call" class="btn btn-info">拨号</button>
                                 <button id="hangup" class="btn btn-danger">挂断</button>
-                                <div id="add_intention_notice_html" style="color: red;"></div>
                             </div>
 
                             <div class="notice_call">待机...</div>
                         </div>
-
                     </div>
                 </div>
 
@@ -164,14 +157,14 @@
             },
             success: function (res) {
                 if (res.msg_code == 100000) {
-                    $('#add_intention_notice_html').html('成功添加意向客户');
+                    $('.notice_call').html('添加意向客户成功');
                     setTimeout(function () {
-                        $('#add_intention_notice_html').html('');
+                        $('.notice_call').html('');
                     }, 3000)
                 } else {
-                    $('#add_intention_notice_html').html('意向客户添加失败');
+                    $('.notice_call').html('意向客户添加失败');
                     setTimeout(function () {
-                        $('#add_intention_notice_html').html('');
+                        $('.notice_call').html('');
                     }, 3000)
                 }
             }

@@ -16,6 +16,7 @@
         "intervention/image": "^2.7",
         "laravel/framework": "^6.20.26",
         "laravel/tinker": "^2.5",
+        "phpoffice/phpspreadsheet": "^1.22",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {

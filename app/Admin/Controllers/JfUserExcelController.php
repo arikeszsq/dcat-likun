@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Grid\AssignUser;
+use App\Admin\Actions\ImportExcel;
 use App\Admin\Extensions\CheckRow;
 use App\Models\JfUserExcel;
 use App\Traits\UserTrait;
@@ -15,7 +16,7 @@ class JfUserExcelController extends AdminController
 {
     use UserTrait;
 
-    public $title='资源';
+    public $title = '资源';
 
     /**
      * Make a grid builder.
@@ -26,6 +27,10 @@ class JfUserExcelController extends AdminController
     {
         return Grid::make(new JfUserExcel(), function (Grid $grid) {
 
+            $grid->tools(function (Grid\Tools $tools) {
+                $tools->append(new ImportExcel());
+            });
+
             if (!self::isSuperAdmin()) {
                 $grid->model()->where('web_id', static::webId());
                 if (!self::isWebAdmin()) {
@@ -35,9 +40,9 @@ class JfUserExcelController extends AdminController
             $grid->model()->orderBy('id', 'desc');
             $grid->column('id', __('Id'))->sortable();
 
-            $grid->column('user_name','姓名');
-            $grid->column('mobile','手机号');
-            $grid->column('company_name','公司名称');
+            $grid->column('user_name', '姓名');
+            $grid->column('mobile', '手机号');
+            $grid->column('company_name', '公司名称');
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
@@ -48,9 +53,9 @@ class JfUserExcelController extends AdminController
                 new AssignUser()
             ]);
 
-            $grid->actions(function ($actions) {
-                $actions->append(new CheckRow($actions->row,'jf_user_intention'));
-            });
+//            $grid->actions(function ($actions) {
+//                $actions->append(new CheckRow($actions->row, 'jf_user_intention'));
+//            });
 
         });
     }
@@ -66,9 +71,9 @@ class JfUserExcelController extends AdminController
     {
         return Show::make($id, new JfUserExcel(), function (Show $show) {
             $show->field('id');
-            $show->field('user_name','姓名');
-            $show->field('mobile','手机号');
-            $show->field('company_name','公司名称');
+            $show->field('user_name', '姓名');
+            $show->field('mobile', '手机号');
+            $show->field('company_name', '公司名称');
 
             $show->field('status');
             $show->field('call_no');

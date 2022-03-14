@@ -11,18 +11,37 @@
                     <div class="sj_nr_nr_bt">
                         <ul>
                             <li><span>公司名称</span><span>用户名</span><span>手机号</span><span>数据来源</span></li>
-                            <li class="on_a">
-                                <span> 测试公司2</span>
-                                <span> 李四</span>
-                                <span> 181152365632</span>
-                                <span> 企查查</span>
-                            </li>
-                            <li>
-                                <span> 测试公司2</span>
-                                <span> 李四</span>
-                                <span> 181152365632</span>
-                                <span> 企查查</span>
-                            </li>
+                            @foreach ($users as $k => $val)
+                                @if($val['call_no'])
+                                    <li class="on_a user-info"
+                                        data-key_id={{ $val['key_id'] }}
+                                            data-id={{ $val['id'] }}
+                                            data-user_id={{ $val['user_id'] }}
+                                            data-user_name={{ $val['user_name'] }}
+                                            data-mobile={{ $val['mobile'] }}
+                                            data-call_no={{ $val['call_no'] }}
+                                            data-company_name={{ $val['company_name'] }}
+                                    >
+                                @else
+                                    <li class=" user-info"
+                                        data-key_id={{ $val['key_id'] }}
+                                            data-id={{ $val['id'] }}
+                                            data-user_id={{ $val['user_id'] }}
+                                            data-user_name={{ $val['user_name'] }}
+                                            data-mobile={{ $val['mobile'] }}
+                                            data-call_no={{ $val['call_no'] }}
+                                            data-company_name={{ $val['company_name'] }}
+                                    >
+                                        @endif
+                                        <input type="hidden" id="user-mobile-{{ $val['key_id'] }}"
+                                               value="{{ $val['mobile'] }}">
+                                        <input type="hidden" id="user-id-{{ $val['id'] }}" value="{{ $val['id'] }}">
+                                        <span> {{ $val['company_name']}}</span>
+                                        <span> {{ $val['user_name']}}</span>
+                                        <span> {{ $val['mobile']}}</span>
+                                        <span> {{ $val['source']}}</span>
+                                    </li>
+                                    @endforeach
                         </ul>
                     </div>
                 </div>
@@ -47,7 +66,7 @@
                                 <span>手机号:</span><input type="text" class="txt form-mobile" placeholder="手机号"/>
                             </div>
                             <div class="form-item">
-                                <span>数据来源:</span><input type="text" class="txt form-mobile"
+                                <span>数据来源:</span><input type="text" class="txt form-source"
                                                          placeholder="数据来源"/>
                             </div>
                             <div class="form-item">
@@ -61,7 +80,8 @@
                             </div>
                             <div class="form-item">
                                 <span>客户信息登记:</span>
-                                <textarea rows="3" class="gjkh_a" placeholder="请填写客户信息登记"></textarea></div>
+                                <textarea rows="3" class="gjkh_a form-bak" placeholder="请填写客户信息登记"></textarea>
+                            </div>
                             <input type="hidden" id="stop_continue_call" value="0">
                         </form>
 
@@ -118,7 +138,6 @@
     //转为意向客户
     $('#set_intention_user').click(function () {
         var select_tag_ids = '0';
-        var type = $('.khlb_user_type').data('id');
         $('.nb_tag').each(function () {
             var select_val = $(this).data('select');
             if (select_val == 1) {
@@ -126,21 +145,12 @@
                 select_tag_ids += ',' + id_val
             }
         });
-    });
-</script>
 
-<script>
-    $('#set_intention_user').click(function () {
-        addIntentionUser();
-    });
-
-    function addIntentionUser() {
         var company_name = $('.form-company-name').val();
         var user_name = $('.form-user-name').val();
         var mobile = $('.form-mobile').val();
-        var wechat = $('.form-wechat').val();
-        var qq = $('.form-qq').val();
-        var type = $('input[name="type"]:checked').val();
+        var source = $('.form-source').val();
+        var type = $('.khlb_user_type').data('id');
         var bak = $('.form-bak').val();
         $.ajax({
             type: "POST",
@@ -150,9 +160,9 @@
                 'company_name': company_name,
                 'user_name': user_name,
                 'mobile': mobile,
-                'wechat': wechat,
-                'qq': qq,
                 'type': type,
+                'source': source,
+                'select_tag_ids': select_tag_ids,
                 'bak': bak
             },
             success: function (res) {
@@ -169,7 +179,7 @@
                 }
             }
         });
-    }
+    });
 
 
     //初始化设备
@@ -182,12 +192,9 @@
 
     //点击右侧列表，把信息传到表单
     $('.user-info').click(function () {
-        var id = $(this).data('id');
-        var user_id = $(this).data('user_id');
         var company_name = $(this).data('company_name');
         var user_name = $(this).data('user_name');
         var mobile = $(this).data('mobile');
-        var call_no = $(this).data('call_no');
         $('.form-company-name').val(company_name);
         $('.form-user-name').val(user_name);
         $('.form-mobile').val(mobile);

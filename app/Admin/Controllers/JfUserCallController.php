@@ -51,6 +51,7 @@ class JfUserCallController extends Controller
                 'mobile' => $user->mobile,
                 'call_no' => $user->call_no,
                 'company_name' => $user->company_name,
+                'source' => $user->source,
             ];
         }
         return $content->body(view('user.call', ['users' => $data, 'tags' => $tags]));

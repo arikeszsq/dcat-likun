@@ -148,8 +148,8 @@ SCRIPT;
         Admin::script($this->script());
 //        Admin::js('/static/js/app.js');
 
-        return "<a class='btn btn-xs btn-success call_mobile' data-id='{$this->id}' data-mobile='{$this->mobile}' data-table_name='{$this->table_name}'><i class=\"fa fa-phone\" aria-hidden=\"true\"></i>拨号</a>
-<a class='btn btn-xs btn-danger hang_mobile' data-mobile='{$this->mobile}'>挂机</a>";
+        return "<a class='text-success call_mobile' data-id='{$this->id}' data-mobile='{$this->mobile}' data-table_name='{$this->table_name}'>拨号<i class=\"fa fa-phone\" aria-hidden=\"true\"></i></a>&nbsp;
+<a class='text-danger hang_mobile' data-mobile='{$this->mobile}'>挂机<i class=\"fa fa-close\" aria-hidden=\"true\"></i></a>";
 
     }
 

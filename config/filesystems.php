@@ -57,23 +57,9 @@ return [
 
         'admin' => [
             'driver' => 'local',
-            'root' => public_path('uploads/admin'),
+            'root' => public_path(''),
             'visibility' => 'public',
-            'url' => env('APP_URL').'/uploads/admin',
-        ],
-
-        'company' => [
-            'driver' => 'local',
-            'root' => public_path('uploads/company'),
-            'visibility' => 'public',
-            'url' => env('APP_URL').'/uploads/company',
-        ],
-
-        'person' => [
-            'driver' => 'local',
-            'root' => public_path('uploads/person'),
-            'visibility' => 'public',
-            'url' => env('APP_URL').'/uploads/person',
+            'url' => env('APP_URL'),
         ],
 
         's3' => [

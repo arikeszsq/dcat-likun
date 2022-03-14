@@ -136,7 +136,7 @@ return [
 
         'guards' => [
             'admin' => [
-                'driver'   => 'session',
+                'driver' => 'session',
                 'provider' => 'admin',
             ],
         ],
@@ -144,7 +144,7 @@ return [
         'providers' => [
             'admin' => [
                 'driver' => 'eloquent',
-                'model'  => App\Models\AdminUser::class,
+                'model' => App\Models\AdminUser::class,
             ],
         ],
 
@@ -168,8 +168,10 @@ return [
     */
     'grid' => [
 
-        // The global Grid action display class.
-        'grid_action_class' => Dcat\Admin\Grid\Displayers\Actions::class,
+        // The global Grid action display class.  重新定义表格操作按钮
+//        'grid_action_class' => Dcat\Admin\Grid\Displayers\Actions::class,
+        'grid_action_class' => App\Admin\Actions\TextActions::class,
+
 
         // The global Grid batch action display class.
         'batch_action_class' => Dcat\Admin\Grid\Tools\BatchActions::class,
@@ -235,7 +237,7 @@ return [
         'cache' => [
             // enable cache or not
             'enable' => false,
-            'store'  => 'file',
+            'store' => 'file',
         ],
 
         // Whether enable menu bind to a permission.
@@ -267,8 +269,9 @@ return [
         // Image and file upload path under the disk above.
         'directory' => [
             'image' => 'images',
-            'file'  => 'files',
+            'file' => 'files',
         ],
+
     ],
 
     /*
@@ -301,12 +304,12 @@ return [
         'menu_model' => Dcat\Admin\Models\Menu::class,
 
         // Pivot table for table above.
-        'role_users_table'       => 'admin_role_users',
+        'role_users_table' => 'admin_role_users',
         'role_permissions_table' => 'admin_role_permissions',
-        'role_menu_table'        => 'admin_role_menu',
-        'permission_menu_table'  => 'admin_permission_menu',
-        'settings_table'         => 'admin_settings',
-        'extensions_table'       => 'admin_extensions',
+        'role_menu_table' => 'admin_role_menu',
+        'permission_menu_table' => 'admin_permission_menu',
+        'settings_table' => 'admin_settings',
+        'extensions_table' => 'admin_extensions',
         'extension_histories_table' => 'admin_extension_histories',
     ],
 
@@ -368,8 +371,8 @@ return [
     'multi_app' => [
         // 与新应用的配置文件名称一致
         // 设置为true启用，false则是停用
-        'company' => true,
-        'person' => true,
+        'company' => false,
+        'person' => false,
     ],
 
 ];

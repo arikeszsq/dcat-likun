@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\JfUserExcel;
+use App\Models\Tag;
 use App\Traits\UserTrait;
 use Dcat\Admin\Layout\Content;
 use Illuminate\Http\Request;
@@ -13,7 +14,6 @@ class JfUserCallController extends Controller
 {
     use UserTrait;
     public $title = '';
-
 
     public function index(Content $content)
     {
@@ -27,6 +27,20 @@ class JfUserCallController extends Controller
             ->limit(200)
             ->get();
 
+        $data_tags = Tag::query()
+            ->where('web_id', $web_id)
+            ->orderBy('id', 'desc')
+            ->limit(200)
+            ->get();
+
+        $tags = [];
+        foreach ($data_tags as $tag) {
+            $tags[] = [
+                'id' => $tag->id,
+                'name' => $tag->name,
+            ];
+        }
+
         $data = [];
         foreach ($users as $key => $user) {
             $data[] = [
@@ -39,7 +53,7 @@ class JfUserCallController extends Controller
                 'company_name' => $user->company_name,
             ];
         }
-        return $content->body(view('user.call',['users' => $data]));
+        return $content->body(view('user.call', ['users' => $data, 'tags' => $tags]));
     }
 
 

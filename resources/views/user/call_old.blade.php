@@ -2,139 +2,95 @@
 <link rel="stylesheet" href="/static/call/call.css">
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 
-<div class="con_a_w">
-    <div class="con_a">
-        <div class="con_a_l">
-            <div class="sj_nr">
-                <div class="sj_nr_bt">待呼叫资源</div>
-                <div class="sj_nr_nr">
-                    <div class="sj_nr_nr_bt">
-                        <ul>
-                            <li><span>公司名称</span><span>用户名</span><span>手机号</span><span>数据来源</span></li>
-                            <li class="on_a">
-                                <span> 测试公司2</span>
-                                <span> 李四</span>
-                                <span> 181152365632</span>
-                                <span> 企查查</span>
-                            </li>
-                            <li>
-                                <span> 测试公司2</span>
-                                <span> 李四</span>
-                                <span> 181152365632</span>
-                                <span> 企查查</span>
-                            </li>
-                        </ul>
-                    </div>
+<div class="container-01 clearfix">
+    <div class="right list_item user-info-list">
+        <li class="li_title"><span>公司名称</span><span>用户名</span><span>手机号</span></li>
+        <ul>
+            @foreach ($users as $k => $val)
+                <li class="user-info"
+                    data-key_id={{ $val['key_id'] }}
+                        data-id={{ $val['id'] }}
+                        data-user_id={{ $val['user_id'] }}
+                        data-user_name={{ $val['user_name'] }}
+                        data-mobile={{ $val['mobile'] }}
+                        data-call_no={{ $val['call_no'] }}
+                        data-company_name={{ $val['company_name'] }}
+                >
+                    <input type="hidden" id="user-mobile-{{ $val['key_id'] }}" value="{{ $val['mobile'] }}">
+                    <input type="hidden" id="user-id-{{ $val['id'] }}" value="{{ $val['id'] }}">
+                    <span> {{ $val['company_name']}}</span>
+                    <span> {{ $val['user_name']}}</span>
+                    <span> {{ $val['mobile']}}</span>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+    <div class="container_zong left">
+        <form class="container_sss">
+            <input type="hidden" id="excel-user_id">
+            <div class="form-item">
+                <input type="text" class="txt form-company-name" placeholder="企业名称"/>
+            </div>
+            <div class="form-item">
+                <input type="text" class="txt form-user-name" placeholder="联系人"/>
+            </div>
+            <div class="form-item">
+                <input type="text" class="txt form-mobile" placeholder="手机号"/>
+            </div>
+            <div class="form-item">
+                <input type="text" class="txt form-wechat" placeholder="请输入微信号"/>
+            </div>
+            <div class="form-item">
+                <input type="text" class="txt form-qq" placeholder="请输入QQ号"/>
+            </div>
+            <div class="form-item clearfix">
+                <div class="left title">客户类别</div>
+                <div class="left">
+                    <input type="radio" name="type" value="A" checked/><span>A</span>
+                    <input type="radio" name="type" value="B"/><span>B</span>
+                    <input type="radio" name="type" value="C"/><span>C</span>
+                    <input type="radio" name="type" value="D"/><span>D</span>
                 </div>
             </div>
+            <div class="form-item"><input type="text" class="txt form-bak" placeholder="请填写备注"></div>
+            <input type="hidden" id="stop_continue_call" value="0">
+        </form>
+        <div class="button-list">
+            <button id="batch_call" class="btn btn-success">开始自动拨号</button>
+            <button id="batch_hangup" class="btn btn-danger">停止自动拨号</button>
+            <button id="call" class="btn btn-info">拨号</button>
+            <button id="hangup" class="btn btn-danger">挂断</button>
+            <button id="set_intention_user" class="btn btn-primary">转为意向客户</button>
+            <div id="add_intention_notice_html" style="color: red;"></div>
         </div>
-        <div class="con_a_r">
-            <div class="bddh_nr">
-                <div class="sj_nr_bt">拨打电话</div>
-                <div class="bddh_nr_nr">
-                    <div class="container_zong">
-                        <form class="container_sss">
-                            <input type="hidden" id="excel-user_id">
-                            <div class="form-item">
-                                <span>企业名称:</span>
-                                <input type="text" class="txt form-company-name" placeholder="企业名称"/>
-                            </div>
-                            <div class="form-item">
-                                <span>联系人:</span>
-                                <input type="text" class="txt form-user-name" placeholder="联系人"/>
-                            </div>
-                            <div class="form-item">
-                                <span>手机号:</span><input type="text" class="txt form-mobile" placeholder="手机号"/>
-                            </div>
-                            <div class="form-item">
-                                <span>数据来源:</span><input type="text" class="txt form-mobile"
-                                                         placeholder="数据来源"/>
-                            </div>
-                            <div class="form-item">
-                                <span class="form-item">客户类别</span>
-                                <div class="khlb">
-                                    <span class="nb_type khlb_user_type" data-id="A">A类客户</span>
-                                    <span class="nb_type" data-id="B">B类客户</span>
-                                    <span class="nb_type" data-id="C">C类客户</span>
-                                    <span class="nb_type" data-id="D">D类客户</span>
-                                </div>
-                            </div>
 
-
-                            <div class="form-item">
-                                <span>客户信息登记:</span>
-                                <textarea rows="3" class="gjkh_a" placeholder="请填写客户信息登记"></textarea></div>
-
-                            <input type="hidden" id="stop_continue_call" value="0">
-                        </form>
-
-                        <div class="container_zong biaoqian_a">
-                            <div class="container_sss">
-                                <div class="form-item">
-                                    <span class="form-item">标签：</span>
-                                    <div class="khlb nb_tag_list">
-                                        @foreach ($tags as $tag)
-                                            <span class="nb_tag" data-select="2"
-                                                  data-id="{{$tag['id']}}">{{$tag['name']}}</span>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="button-list">
-                            <button id="set_intention_user" class="btn btn-primary">转为意向客户</button>
-                        </div>
-
-                        <div class="container_zong biaoqian_a">
-                            <div class="button-list">
-                                <button id="batch_call" class="btn btn-success">开始自动拨号</button>
-                                <button id="batch_hangup" class="btn btn-danger">停止自动拨号</button>
-                                <button id="call" class="btn btn-info">拨号</button>
-                                <button id="hangup" class="btn btn-danger">挂断</button>
-                                <div id="add_intention_notice_html" style="color: red;"></div>
-                            </div>
-
-                            <div class="notice_call">待机...</div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-            <div class="c"></div>
-        </div>
+        <div class="notice_call">待机...</div>
     </div>
 </div>
-<script>
-    $('.nb_type').click(function () {
-        $(this).addClass('khlb_user_type').siblings().removeClass('khlb_user_type');
-    });
 
-    $('.nb_tag').click(function () {
-        var nb_val = $(this).data('select');
-        if (nb_val == 1) {
-            $(this).data('select', 2);
-            $(this).removeClass('khlb_01');
-        } else {
-            $(this).data('select', 1);
-            $(this).addClass('khlb_01');
-        }
-    });
+<style>
+    .notice_call {
+        margin-top: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 20px;
+        width: 330px;
+        height: 60px;
+        line-height: 60px;
+        background-color: lightblue;
+        font-size: 18px;
+        color: whitesmoke;
+    }
 
-    //转为意向客户
-    $('#set_intention_user').click(function () {
-        var select_tag_ids = '0';
-        var type = $('.khlb_user_type').data('id');
-        $('.nb_tag').each(function () {
-            var select_val = $(this).data('select');
-            if (select_val == 1) {
-                var id_val = $(this).data('id');
-                select_tag_ids += ',' + id_val
-            }
-        });
-    });
-</script>
+    .already_called {
+        background-color: #f9f9f9;
+    }
+
+    .already_called span  {
+        color: #ccc;
+    }
+
+</style>
 
 <script>
     $('#set_intention_user').click(function () {

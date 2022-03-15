@@ -79,7 +79,7 @@ class JfTalkLogController extends AdminController
     protected function form()
     {
         return Form::make(new JfTalkLog(), function (Form $form) {
-            $form->text('user_name');
+            $form->text('user_name','姓名');
         });
     }
 }

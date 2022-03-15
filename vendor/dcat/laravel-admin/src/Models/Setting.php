@@ -28,4 +28,11 @@ class Setting extends Model
 
         $this->setTable(config('admin.database.settings_table') ?: 'admin_settings');
     }
+
+    public static function getSetting()
+    {
+        return Setting::query()->where('web_id',self::webId())
+            ->orderBy('id','desc')
+            ->first();
+    }
 }

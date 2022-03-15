@@ -8,12 +8,44 @@ use App\Models\JfUserIntention;
 use App\Traits\ResponseTrait;
 use App\Traits\UserTrait;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Dcat\Admin\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 class ApiController extends AdminController
 {
     use UserTrait, ResponseTrait;
+
+
+    public function verifyMobile(Request $request)
+    {
+        //对redis设置 手机号key ,1天 ，7天和30天有效期的值
+
+        $inputs = $request->all();
+        $mobile = $inputs['mobile'];
+
+        $mobile_day = $mobile . '1';
+        $mobile_week = $mobile . '7';
+        $mobile_month = $mobile . '30';
+
+        $setting = Setting::getSetting();
+        if(!$setting){
+            $day_num = 2;
+            $week_num = 7;
+            $month_num = 30;
+        }else{
+            $day_num = $setting->protect_day;
+            $week_num = $setting->protect_week;
+            $month_num = $setting->protect_month;
+        }
+
+//        $day_redis_num = Redis::;
+//        $week_redis_num = ;
+//        $month_redis_num = ;
+//
+//        return Redis::incr();
+    }
 
     public function addIntentionUser(Request $request)
     {
@@ -124,7 +156,7 @@ class ApiController extends AdminController
             'web_id' => $web_id,
             'user_id' => $user_id,
             'user_name' => $user->user_name,
-            'mobile'=>$user->mobile,
+            'mobile' => $user->mobile,
             'created_at' => date('Y-m-d H:i:s', time()),
             'table_id' => $id,
             'table_name' => $table_name,

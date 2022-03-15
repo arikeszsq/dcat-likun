@@ -2,10 +2,12 @@
 
 namespace Dcat\Admin\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
+
     protected $primaryKey = 'slug';
     public $incrementing = false;
     protected $fillable = ['slug', 'value'];
@@ -29,10 +31,5 @@ class Setting extends Model
         $this->setTable(config('admin.database.settings_table') ?: 'admin_settings');
     }
 
-    public static function getSetting()
-    {
-        return Setting::query()->where('web_id',self::webId())
-            ->orderBy('id','desc')
-            ->first();
-    }
+
 }

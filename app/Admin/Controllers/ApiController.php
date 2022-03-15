@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\JfUserExcel;
 use App\Models\JfUserIntention;
+use App\Models\WebSetting;
 use App\Traits\ResponseTrait;
 use App\Traits\UserTrait;
 use Dcat\Admin\Http\Controllers\AdminController;
@@ -16,14 +17,12 @@ use Illuminate\Support\Facades\Redis;
 class ApiController extends AdminController
 {
     use UserTrait, ResponseTrait;
-
-
     public function verifyMobile(Request $request)
     {
         //对redis设置 手机号key ,1天 ，7天和30天有效期的值
         $inputs = $request->all();
         $mobile = $inputs['mobile'];
-        $setting = Setting::getSetting();
+        $setting = WebSetting::getSetting();
         if (!$setting) {
             $day_num = 2;
             $week_num = 7;
@@ -39,6 +38,21 @@ class ApiController extends AdminController
         $day_redis_num = intval(Redis::get($mobile_day));
         $week_redis_num = intval(Redis::get($mobile_week));
         $month_redis_num = intval(Redis::get($mobile_month));
+
+        if (!$day_redis_num) {
+            Redis::set($mobile_day, 0);
+            Redis::expire($mobile_day, 3600);
+        }
+
+        if (!$day_redis_num) {
+            Redis::set($mobile_week, 0);
+            Redis::expire($mobile_week, 3600 * 7);
+        }
+
+        if (!$day_redis_num) {
+            Redis::set($mobile_month, 0);
+            Redis::expire($mobile_month, 3600 * 30);
+        }
 
         if ($day_redis_num > $day_num) {
             return false;

@@ -53,9 +53,14 @@ Route::group([
 
 
     /** 以下接口 ，记得 1.需要去系统添加权限 2.需要在middleware添加白名单 **/
+
+    /** 添加意向客户 **/
     Route::any('/add-intention', 'ApiController@addIntentionUser');
+    /** 添加通话记录 **/
     Route::any('/call-back', 'ApiController@addUserCallRB');
+    /** 更新通话记录的录音地址和通话时间 **/
     Route::any('/add-call-record', 'ApiController@addUserCallRecord');
+    /** 验证手机号是否在保护期 **/
     Route::any('/verify-mobile', 'ApiController@verifyMobile');
 
 });

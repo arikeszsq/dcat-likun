@@ -5,8 +5,10 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\JfUserExcel;
 use App\Models\Tag;
+use App\Models\WebSetting;
 use App\Traits\UserTrait;
 use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Models\Setting;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Redis;
@@ -19,13 +21,6 @@ class JfUserCallController extends Controller
 
     public function index(Content $content)
     {
-        //存入redis
-        Redis::set('key','value');
-
-        Redis::incr('no');
-//取出
-        $value = Redis::get('no');
-        var_dump($value);exit;
         $web_id = static::webId();
         $user_id = static::userId();
         $users = JfUserExcel::query()

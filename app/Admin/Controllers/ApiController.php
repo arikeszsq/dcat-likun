@@ -21,30 +21,41 @@ class ApiController extends AdminController
     public function verifyMobile(Request $request)
     {
         //对redis设置 手机号key ,1天 ，7天和30天有效期的值
-
         $inputs = $request->all();
         $mobile = $inputs['mobile'];
-
-        $mobile_day = $mobile . '1';
-        $mobile_week = $mobile . '7';
-        $mobile_month = $mobile . '30';
-
         $setting = Setting::getSetting();
-        if(!$setting){
+        if (!$setting) {
             $day_num = 2;
             $week_num = 7;
             $month_num = 30;
-        }else{
+        } else {
             $day_num = $setting->protect_day;
             $week_num = $setting->protect_week;
             $month_num = $setting->protect_month;
         }
+        $mobile_day = $mobile . '1';
+        $mobile_week = $mobile . '7';
+        $mobile_month = $mobile . '30';
+        $day_redis_num = intval(Redis::get($mobile_day));
+        $week_redis_num = intval(Redis::get($mobile_week));
+        $month_redis_num = intval(Redis::get($mobile_month));
 
-//        $day_redis_num = Redis::;
-//        $week_redis_num = ;
-//        $month_redis_num = ;
-//
-//        return Redis::incr();
+        if ($day_redis_num > $day_num) {
+            return false;
+        } else {
+            Redis::incr($mobile_day);
+        }
+        if ($week_redis_num > $week_num) {
+            return false;
+        } else {
+            Redis::incr($mobile_week);
+        }
+        if ($month_redis_num > $month_num) {
+            return false;
+        } else {
+            Redis::incr($mobile_month);
+        }
+        return true;
     }
 
     public function addIntentionUser(Request $request)

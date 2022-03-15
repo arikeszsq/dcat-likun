@@ -56,5 +56,6 @@ Route::group([
     Route::any('/add-intention', 'ApiController@addIntentionUser');
     Route::any('/call-back', 'ApiController@addUserCallRB');
     Route::any('/add-call-record', 'ApiController@addUserCallRecord');
+    Route::any('/verify-mobile', 'ApiController@verifyMobile');
 
 });

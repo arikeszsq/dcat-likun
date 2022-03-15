@@ -21,8 +21,10 @@ class JfUserCallController extends Controller
     {
         //存入redis
         Redis::set('key','value');
+
+        Redis::incr('no');
 //取出
-        $value = Redis::get('key');
+        $value = Redis::get('no');
         var_dump($value);exit;
         $web_id = static::webId();
         $user_id = static::userId();

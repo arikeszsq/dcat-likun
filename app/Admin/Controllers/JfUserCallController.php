@@ -8,7 +8,8 @@ use App\Models\Tag;
 use App\Traits\UserTrait;
 use Dcat\Admin\Layout\Content;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+
+use Illuminate\Support\Facades\Redis;
 
 
 class JfUserCallController extends Controller
@@ -18,9 +19,11 @@ class JfUserCallController extends Controller
 
     public function index(Content $content)
     {
-        Cache::store('redis')->put('bar', 'baz', 10); // 10 分钟
-        $bar = Cache::store('redis')->get('bar',0); // 10 分钟
-        var_dump($bar);exit;
+        //存入redis
+        Redis::set('key','value');
+//取出
+        $value = Redis::get('key');
+        var_dump($value);exit;
         $web_id = static::webId();
         $user_id = static::userId();
         $users = JfUserExcel::query()

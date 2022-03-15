@@ -17,6 +17,7 @@
         "laravel/framework": "^6.20.26",
         "laravel/tinker": "^2.5",
         "phpoffice/phpspreadsheet": "^1.22",
+        "predis/predis": "^1.1",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {

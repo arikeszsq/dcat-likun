@@ -235,6 +235,24 @@
     });
 
     function CallContinue(keyId) {
+
+        //到了换卡次数之后，开始延迟等待话机重启后拨号
+        var next_num_set = $('#next_num').val();
+        var next_num = getCookie('next_sim_num');
+        if (!next_num) {
+            next_num = 1;
+        } else if (parseInt(next_num) >= parseInt(next_num_set)) {
+            var notice = '正在切换另一张卡，电话正在重启，请稍等60秒左右';
+            $('.notice_call').html(notice);
+            addCookie('next_sim_num', 0);
+            setTimeout(function () {
+                CallContinue(keyId);//6000毫秒后,切换完卡，开始拨号
+            }, 60000)
+        }
+        var next_num_incr = parseInt(next_num) + 1;
+        addCookie('next_sim_num', next_num_incr);
+
+
         if (!ws) {
             alert("控件未初始化");
             return false;
@@ -342,13 +360,49 @@
         }
     });
 
+    function addCookie(name, value) {
+        localStorage.setItem(name, value);
+    }
+
+    function delCookie(name) {
+        localStorage.removeItem(name);
+    }
+
+    function getCookie(name) {
+        return localStorage.getItem(name);
+    }
+
     function Call(number) {
+
+        var rolling_time_set = $('#rolling_time').val();
+        var valid_time_set = $('#valid_time').val();
+
+
+        var next_num_set = $('#next_num').val();
+        var next_num = getCookie('next_sim_num');
+        if (!next_num) {
+            next_num = 1;
+        } else if (parseInt(next_num) >= parseInt(next_num_set)) {
+            var notice = '正在切换另一张卡，电话正在重启，请稍等60秒左右';
+            $('.notice_call').html(notice);
+            addCookie('next_sim_num', 0);
+            setTimeout(function () {
+                Call(number);//6000毫秒后,切换完卡，开始拨号
+            }, 60000)
+        }
+        var next_num_incr = parseInt(next_num) + 1;
+        addCookie('next_sim_num', next_num_incr);
+
+
+
         if (!ws) {
             alert("控件未初始化");
             return false;
         }
         $('.notice_call').html('开始拨号');
         callout_cb = 'CallOut_cb_' + new Date().getTime();
+
+
         var action = {
             action: 'CallOut',
             number: number,
@@ -371,8 +425,6 @@
                     ajaxRecordSync(id, record, 'jf_user_excel');
                     uploadFile();
                     $('.notice_call').html('拨号中：' + number);
-
-
                     var id_name = '#user-mobile-' + id;
                     $(id_name).val('');
                     $(id_name).parent().addClass('already_called');

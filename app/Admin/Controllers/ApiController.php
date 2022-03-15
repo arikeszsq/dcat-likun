@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Redis;
 class ApiController extends AdminController
 {
     use UserTrait, ResponseTrait;
+
     public function verifyMobile(Request $request)
     {
         //对redis设置 手机号key ,1天 ，7天和30天有效期的值
@@ -41,17 +42,17 @@ class ApiController extends AdminController
 
         if (!$day_redis_num) {
             Redis::set($mobile_day, 0);
-            Redis::expire($mobile_day, 3600);
+            Redis::expire($mobile_day, 24 * 3600);
         }
 
         if (!$day_redis_num) {
             Redis::set($mobile_week, 0);
-            Redis::expire($mobile_week, 3600 * 7);
+            Redis::expire($mobile_week, 24 * 3600 * 7);
         }
 
         if (!$day_redis_num) {
             Redis::set($mobile_month, 0);
-            Redis::expire($mobile_month, 3600 * 30);
+            Redis::expire($mobile_month, 24 * 3600 * 30);
         }
 
         if ($day_redis_num > $day_num) {

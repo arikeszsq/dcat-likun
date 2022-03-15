@@ -83,6 +83,10 @@
                                 <textarea rows="3" class="gjkh_a form-bak" placeholder="请填写客户信息登记"></textarea>
                             </div>
                             <input type="hidden" id="stop_continue_call" value="0">
+                            <input type="hidden" id="rolling_time" value="{{$rolling_time}}">
+                            <input type="hidden" id="valid_time" value="{{$valid_time}}">
+                            <input type="hidden" id="next_num" value="{{$next_num}}">
+
                         </form>
 
                         <div class="container_zong biaoqian_a">

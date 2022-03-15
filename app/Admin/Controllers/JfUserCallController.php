@@ -21,6 +21,23 @@ class JfUserCallController extends Controller
 
     public function index(Content $content)
     {
+        $setting = WebSetting::getSetting();
+        if ($setting) {
+            $roll_time = $setting->rolling;
+            $valid_time = $setting->valid_phone;
+            $next_num = $setting->next_num;
+        } else {
+            $roll_time = 0;
+            $valid_time = 10;
+            $next_num = 20;
+        }
+
+        $setting_data = [
+            'rolling_time' => $roll_time,
+            'valid_time' => $valid_time,
+            'next_num' => $next_num,
+        ];
+
         $web_id = static::webId();
         $user_id = static::userId();
         $users = JfUserExcel::query()
@@ -58,7 +75,13 @@ class JfUserCallController extends Controller
                 'source' => $user->source,
             ];
         }
-        return $content->body(view('user.call', ['users' => $data, 'tags' => $tags]));
+        return $content->body(view('user.call', [
+            'users' => $data,
+            'tags' => $tags,
+            'rolling_time' => $roll_time,
+            'valid_time' => $valid_time,
+            'next_num' => $next_num,
+        ]));
     }
 
 

@@ -56,21 +56,21 @@ class ApiController extends AdminController
         }
 
         if ($day_redis_num > $day_num) {
-            return false;
+            return self::fail();
         } else {
             Redis::incr($mobile_day);
         }
         if ($week_redis_num > $week_num) {
-            return false;
+            return self::fail();
         } else {
             Redis::incr($mobile_week);
         }
         if ($month_redis_num > $month_num) {
-            return false;
+            return self::fail();
         } else {
             Redis::incr($mobile_month);
         }
-        return true;
+        return self::success();
     }
 
     public function addIntentionUser(Request $request)

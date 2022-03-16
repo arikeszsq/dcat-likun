@@ -235,6 +235,14 @@
     });
 
     function CallContinue(keyId) {
+        var id_name = '#user-mobile-' + keyId;
+        var number = $(id_name).val();
+        console.log(id_name, number);
+        var can_call = verifyMobile(number);
+        if (!can_call) {
+            $('.notice_call').html('该号码' + number + '已设置了防骚扰，不可以拨打');
+            CallContinue((keyId + 1));
+        }
 
         //到了换卡次数之后，开始延迟等待话机重启后拨号
         var next_num_set = $('#next_num').val();
@@ -265,11 +273,6 @@
             console.log('停止连续拨号');
             return false;
         }
-
-        var id_name = '#user-mobile-' + keyId;
-
-        var number = $(id_name).val();
-        console.log(id_name, number);
         if (number) {
             var company_name = $(id_name).parent().data('company_name');
             var user_name = $(id_name).parent().data('user_name');
@@ -330,6 +333,23 @@
         }
     }
 
+    function verifyMobile(mobile) {
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "/admin/verify-mobile",
+            data: {'mobile': mobile},
+            success(res) {
+                var code = res.msg_code;
+                if (code == 100000) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+    }
+
     function ajaxSync(id, cdr) {
         $.ajax({
             type: "POST",
@@ -374,6 +394,13 @@
 
     function Call(number) {
 
+
+        var can_call = verifyMobile(number);
+        if (!can_call) {
+            $('.notice_call').html('该号码已设置了防骚扰，不可以拨打');
+            return false;
+        }
+
         var rolling_time_set = $('#rolling_time').val();
         var valid_time_set = $('#valid_time').val();
 
@@ -392,7 +419,6 @@
         }
         var next_num_incr = parseInt(next_num) + 1;
         addCookie('next_sim_num', next_num_incr);
-
 
 
         if (!ws) {

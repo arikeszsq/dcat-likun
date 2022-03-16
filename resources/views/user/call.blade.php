@@ -21,6 +21,7 @@
                                             data-mobile={{ $val['mobile'] }}
                                             data-call_no={{ $val['call_no'] }}
                                             data-company_name={{ $val['company_name'] }}
+                                            data-add_intention=0 data-add_public=0
                                     >
                                 @else
                                     <li class=" user-info"
@@ -31,6 +32,7 @@
                                             data-mobile={{ $val['mobile'] }}
                                             data-call_no={{ $val['call_no'] }}
                                             data-company_name={{ $val['company_name'] }}
+                                            data-add_intention=0 data-add_public=0
                                     >
                                         @endif
                                         <input type="hidden" id="user-mobile-{{ $val['key_id'] }}"
@@ -265,6 +267,12 @@
             alert("控件未初始化");
             return false;
         }
+
+
+        var rolling_time_set = $('#rolling_time').val();
+        var valid_time_set = $('#valid_time').val();
+
+
         $('.notice_call').html('开始连续拨号');
         var stop = $('#stop_continue_call').val();
         console.log(stop);
@@ -302,6 +310,19 @@
                     var param = data.param;
                     console.log(param);
                     if (param.status == 'CallStart') {
+
+
+                        console.log("开始拨号，开始通话");
+                        //开始计时，到时间未接通直接挂断
+                        addCookie('noanswer', 1);
+                        setTimeout(function () {
+                            var noanswer = parseInt(getCookie('noanswer'));
+                            if (noanswer == 1) {
+                                hangup();
+                            }
+                        }, (rolling_time_set * 1000));
+
+
                         $('.notice_call').html('拨号中：' + number);
                         //拨号之后把手机号码置空
                         $(id_name).val('');
@@ -309,6 +330,9 @@
                         record = param.time;
                         ajaxRecordSync(id, record, 'jf_user_excel');
                         uploadFile();
+                    } else if (param.status == 'TalkingStart') {
+                        console.log("开始通话语音");
+                        addCookie('noanswer', 2);
                     } else if (param.status == 'TalkingEnd') {
                         console.log("语音结束");
                     } else if (param.status == 'CallEnd') {
@@ -447,6 +471,17 @@
                 var param = data.param;
                 console.log(param);
                 if (param.status == 'CallStart') {
+
+                    console.log("开始拨号，开始通话");
+                    //开始计时，到时间未接通直接挂断
+                    addCookie('noanswer', 1);
+                    setTimeout(function () {
+                        var noanswer = parseInt(getCookie('noanswer'));
+                        if (noanswer == 1) {
+                            hangup();
+                        }
+                    }, (rolling_time_set * 1000));
+
                     record = param.time;
                     ajaxRecordSync(id, record, 'jf_user_excel');
                     uploadFile();
@@ -454,6 +489,9 @@
                     var id_name = '#user-mobile-' + id;
                     $(id_name).val('');
                     $(id_name).parent().addClass('already_called');
+                } else if (param.status == 'TalkingStart') {
+                    console.log("开始通话语音");
+                    addCookie('noanswer', 2);
                 } else if (param.status == 'TalkingEnd') {
                     console.log("语音结束");
                 } else if (param.status == 'CallEnd') {

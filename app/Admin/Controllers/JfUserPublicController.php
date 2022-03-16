@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Grid\GetUser;
 use App\Models\JfUserPublic;
 use App\Traits\UserTrait;
 use Dcat\Admin\Form;
@@ -23,6 +24,10 @@ class JfUserPublicController extends AdminController
     protected function grid()
     {
         return Grid::make(new JfUserPublic(), function (Grid $grid) {
+
+            $grid->batchActions([
+                new GetUser('领取资源'),
+            ]);
 
             if (!self::isSuperAdmin()) {
                 $grid->model()->where('web_id', static::webId());
@@ -75,7 +80,7 @@ class JfUserPublicController extends AdminController
         return Form::make(new JfUserPublic(), function (Form $form) {
             $form->display('id');
             $form->text('user_name');
-            $form->text('mobile');
+            $form->mobile('mobile');
             $form->text('company_name');
             $form->text('content');
 

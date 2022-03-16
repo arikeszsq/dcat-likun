@@ -8,10 +8,10 @@ return [
     'fields' => [
         'web_id' => 'web_id',
         'user_id' => 'user_id',
-        'excel_user_name' => 'excel_user_name',
+        'user_name' => '姓名',
         'excel_user_id' => 'excel_user_id',
-        'mobile' => 'mobile',
-        'talk_time' => 'talk_time',
+        'mobile' => '手机号',
+        'talk_time' => '通话时长{秒}',
         'record_url' => 'record_url',
         'table_name' => 'table_name',
     ],

@@ -7,10 +7,10 @@ return [
     ],
     'fields' => [
         'web_id' => 'web_id',
-        'user_name' => 'user_name',
-        'mobile' => 'mobile',
-        'company_name' => 'company_name',
-        'content' => 'content',
+        'user_name' => '姓名',
+        'mobile' => '手机号',
+        'company_name' => '公司名称',
+        'content' => '内容',
     ],
     'options' => [
     ],

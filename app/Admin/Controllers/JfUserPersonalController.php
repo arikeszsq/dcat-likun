@@ -77,7 +77,7 @@ class JfUserPersonalController extends AdminController
         return Form::make(new JfUserPersonal(), function (Form $form) {
             $form->display('id');
             $form->text('user_name');
-            $form->text('mobile');
+            $form->mobile('mobile');
             $form->text('company_name');
             $form->text('content');
 

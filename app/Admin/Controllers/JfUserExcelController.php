@@ -93,7 +93,7 @@ class JfUserExcelController extends AdminController
             $form->display('id');
             $form->text('company_name');
             $form->text('user_name');
-            $form->text('mobile');
+            $form->mobile('mobile');
             $form->text('status');
             $form->text('call_no');
 

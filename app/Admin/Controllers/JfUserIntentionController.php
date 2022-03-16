@@ -79,7 +79,7 @@ class JfUserIntentionController extends AdminController
             $form->display('id');
             $form->text('company_name');
             $form->text('user_name');
-            $form->text('mobile');
+            $form->mobile('mobile');
             $form->text('wechat');
             $form->text('qq');
             $form->text('type');

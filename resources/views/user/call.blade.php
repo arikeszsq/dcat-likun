@@ -279,7 +279,7 @@
                         $('.notice_call').html('拨号中：' + number);
                         //拨号之后把手机号码置空
                         $(id_name).val('');
-                        $(id_name).parent().addClass('already_called');
+                        $(id_name).parent().addClass('on_a');
                         record = param.time;
                         ajaxRecordSync(id, record, 'jf_user_excel');
                         uploadFile();
@@ -445,7 +445,7 @@
                     $('.notice_call').html('拨号中：' + number);
                     var id_name = '#user-mobile-' + id;
                     $(id_name).val('');
-                    $(id_name).parent().addClass('already_called');
+                    $(id_name).parent().addClass('on_a');
                 } else if (param.status == 'TalkingStart') {
                     console.log("开始通话语音");
                     addCookie('noanswer', 2);

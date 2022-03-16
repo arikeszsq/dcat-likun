@@ -65,6 +65,17 @@ class JfUserIntentionController extends AdminController
             $show->field('bak');
             $show->field('created_at');
             $show->field('updated_at');
+
+            $show->field('updated_at', '标签')->as(function ($title) {
+                // 获取当前行的其他字段
+                $tag_ids = json_decode($this->select_tag_ids);
+                $name = '';
+                foreach ($tag_ids as $tag_id) {
+                    $tag = Tag::query()->find($tag_id);
+                    $name .= "{$tag->name} 、";
+                }
+                return $name;
+            });
         });
     }
 
@@ -92,9 +103,8 @@ class JfUserIntentionController extends AdminController
                 ->where('web_id', self::webId())
                 ->get();
             $tags_array = [];
-            foreach ($tags as $tag)
-            {
-                $tags_array[$tag->id]=$tag->name;
+            foreach ($tags as $tag) {
+                $tags_array[$tag->id] = $tag->name;
             }
 
             $form->multipleSelect('select_tag_ids', '标签')

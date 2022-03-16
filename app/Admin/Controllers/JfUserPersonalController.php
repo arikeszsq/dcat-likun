@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Grid\ToIntentionUser;
 use App\Models\JfUserPersonal;
 use App\Traits\UserTrait;
 use Dcat\Admin\Form;
@@ -14,7 +15,7 @@ class JfUserPersonalController extends AdminController
 
     use UserTrait;
 
-    public $title='个人资源';
+    public $title = '个人资源';
 
     /**
      * Make a grid builder.
@@ -25,6 +26,10 @@ class JfUserPersonalController extends AdminController
     {
         return Grid::make(new JfUserPersonal(), function (Grid $grid) {
 
+            $grid->batchActions([
+                new ToIntentionUser('转为意向客户'),
+            ]);
+
             if (!self::isSuperAdmin()) {
                 $grid->model()->where('web_id', static::webId());
                 if (!self::isWebAdmin()) {
@@ -34,9 +39,9 @@ class JfUserPersonalController extends AdminController
             $grid->model()->orderBy('id', 'desc');
             $grid->column('id', __('Id'))->sortable();
 
-            $grid->column('user_name','姓名');
-            $grid->column('mobile','手机号');
-            $grid->column('company_name','公司名称');
+            $grid->column('user_name', '姓名');
+            $grid->column('mobile', '手机号');
+            $grid->column('company_name', '公司名称');
 
 
             $grid->filter(function (Grid\Filter $filter) {
@@ -57,9 +62,9 @@ class JfUserPersonalController extends AdminController
     {
         return Show::make($id, new JfUserPersonal(), function (Show $show) {
             $show->field('id');
-            $show->field('user_name','姓名');
-            $show->field('mobile','手机号');
-            $show->field('company_name','公司名称');
+            $show->field('user_name', '姓名');
+            $show->field('mobile', '手机号');
+            $show->field('company_name', '公司名称');
 
             $show->field('content');
             $show->field('created_at');

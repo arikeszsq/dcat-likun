@@ -2,6 +2,8 @@
 <link rel="stylesheet" href="/static/call/call.css">
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 
+<script src="/static/call/addintention.js"></script>
+
 <div class="con_a_w">
     <div class="con_a">
         <div class="con_a_l">
@@ -21,7 +23,6 @@
                                             data-mobile={{ $val['mobile'] }}
                                             data-call_no={{ $val['call_no'] }}
                                             data-company_name={{ $val['company_name'] }}
-                                            data-add_intention=0 data-add_public=0
                                     >
                                 @else
                                     <li class=" user-info"
@@ -32,7 +33,6 @@
                                             data-mobile={{ $val['mobile'] }}
                                             data-call_no={{ $val['call_no'] }}
                                             data-company_name={{ $val['company_name'] }}
-                                            data-add_intention=0 data-add_public=0
                                     >
                                         @endif
                                         <input type="hidden" id="user-mobile-{{ $val['key_id'] }}"
@@ -129,7 +129,6 @@
     $('.nb_type').click(function () {
         $(this).addClass('khlb_user_type').siblings().removeClass('khlb_user_type');
     });
-
     $('.nb_tag').click(function () {
         var nb_val = $(this).data('select');
         if (nb_val == 1) {
@@ -140,51 +139,9 @@
             $(this).addClass('khlb_01');
         }
     });
-
     //转为意向客户
     $('#set_intention_user').click(function () {
-        var select_tag_ids = '0';
-        $('.nb_tag').each(function () {
-            var select_val = $(this).data('select');
-            if (select_val == 1) {
-                var id_val = $(this).data('id');
-                select_tag_ids += ',' + id_val
-            }
-        });
-
-        var company_name = $('.form-company-name').val();
-        var user_name = $('.form-user-name').val();
-        var mobile = $('.form-mobile').val();
-        var source = $('.form-source').val();
-        var type = $('.khlb_user_type').data('id');
-        var bak = $('.form-bak').val();
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: "/admin/add-intention",
-            data: {
-                'company_name': company_name,
-                'user_name': user_name,
-                'mobile': mobile,
-                'type': type,
-                'source': source,
-                'select_tag_ids': select_tag_ids,
-                'bak': bak
-            },
-            success: function (res) {
-                if (res.msg_code == 100000) {
-                    $('.notice_call').html('添加意向客户成功');
-                    setTimeout(function () {
-                        $('.notice_call').html('');
-                    }, 3000)
-                } else {
-                    $('.notice_call').html('意向客户添加失败');
-                    setTimeout(function () {
-                        $('.notice_call').html('');
-                    }, 3000)
-                }
-            }
-        });
+        addTention();
     });
 
 
@@ -254,6 +211,7 @@
         } else if (parseInt(next_num) >= parseInt(next_num_set)) {
             var notice = '正在切换另一张卡，电话正在重启，请稍等60秒左右';
             $('.notice_call').html(notice);
+            useNextSim();
             addCookie('next_sim_num', 0);
             setTimeout(function () {
                 CallContinue(keyId);//6000毫秒后,切换完卡，开始拨号
@@ -267,12 +225,7 @@
             alert("控件未初始化");
             return false;
         }
-
-
         var rolling_time_set = $('#rolling_time').val();
-        var valid_time_set = $('#valid_time').val();
-
-
         $('.notice_call').html('开始连续拨号');
         var stop = $('#stop_continue_call').val();
         console.log(stop);
@@ -404,6 +357,11 @@
         }
     });
 
+    function useNextSim() {
+        ws.send(JSON.stringify({action: 'SimNext', cb: new Date().getTime()}));
+    }
+
+
     function addCookie(name, value) {
         localStorage.setItem(name, value);
     }
@@ -426,8 +384,6 @@
         }
 
         var rolling_time_set = $('#rolling_time').val();
-        var valid_time_set = $('#valid_time').val();
-
 
         var next_num_set = $('#next_num').val();
         var next_num = getCookie('next_sim_num');
@@ -436,6 +392,7 @@
         } else if (parseInt(next_num) >= parseInt(next_num_set)) {
             var notice = '正在切换另一张卡，电话正在重启，请稍等60秒左右';
             $('.notice_call').html(notice);
+            useNextSim();
             addCookie('next_sim_num', 0);
             setTimeout(function () {
                 Call(number);//6000毫秒后,切换完卡，开始拨号

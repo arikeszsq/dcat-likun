@@ -3,8 +3,11 @@
 namespace App\Admin\Controllers;
 
 
+use App\Models\JfTalkLog;
 use App\Models\JfUserExcel;
 use App\Models\JfUserIntention;
+use App\Models\JfUserNoAnswer;
+use App\Models\JfUserPublic;
 use App\Models\WebSetting;
 use App\Traits\ResponseTrait;
 use App\Traits\UserTrait;
@@ -103,15 +106,46 @@ class ApiController extends AdminController
         ];
         try {
             $ret = JfUserIntention::query()->insert($data);
+            $excel_user_id = $inputs['excel_user_id'];
+            JfUserExcel::query()->where('id', $excel_user_id)->delete();
             return self::success($ret);
         } catch (\Exception $e) {
             return self::error($e->getCode(), $e->getMessage());
         }
     }
 
+    //只要拨打电话，就创建一条通话记录，无论拨通未拨通
+    public function addUserCallRecord(Request $request)
+    {
+        $inputs = $request->all();
+        $id = $inputs['id'];
+        $record = $inputs['record'];
+        $user_id = static::userId();
+        $web_id = static::webId();
+        $table_name = isset($inputs['table_name']) && $inputs['table_name'] ? $inputs['table_name'] : '';
+        if (!$table_name) {
+            $table_name = 'jf_user_excel';
+        }
+        $user = DB::table($table_name)->where('id', $id)->first();
+        $data = [
+            'web_id' => $web_id,
+            'user_id' => $user_id,
+            'user_name' => $user->user_name,
+            'mobile' => $user->mobile,
+            'created_at' => date('Y-m-d H:i:s', time()),
+            'table_id' => $id,
+            'table_name' => $table_name,
+            'record_url' => env('QINIU_YUMING') . '/' . $record . '.mp3'
+        ];
+        DB::table('jf_talk_log')->insert($data);
+    }
+
+    //挂机之后，更新通话记录，通话时间等信息
     public function addUserCallRB(Request $request)
     {
         $inputs = $request->all();
+        $user_id = static::userId();
+        $web_id = static::webId();
         $id = $inputs['id'];
         $cdr = $inputs['cdr'];
         //        $cdr = "[Succeeded|CallNumber:18115676166|CallTime:|TalkTime:00:00:08|Key:|ClientOnHook|CCID:89860319945125379324]";
@@ -143,20 +177,49 @@ class ApiController extends AdminController
                     ->update($data);
             }
         } else {
-            $user_excel = JfUserExcel::query()->find($id);
-            $user_excel->call_no += 1;
-            $user_excel->save();
+            //这里是资源库导入资源的操作
             if ($mobile) {
                 $data = [
                     'mobile' => $mobile,
                     'talk_time' => $talk_time,
                     'updated_at' => date('Y-m-d H:i:s', time()),
                 ];
-                DB::table('jf_talk_log')->where('excel_user_id', $id)
+                JfTalkLog::query()->where('table_id', $id)
                     ->where('table_name', 'jf_user_excel')
                     ->orderBy('id', 'desc')
                     ->limit(1)
                     ->update($data);
+            }
+            if ($talk_time == 0) {
+                //导入资源里，未接通的电话，会挪动到未接通表
+                $user = JfUserExcel::query()->find($id);
+                $data = [
+                    'web_id' => $web_id,
+                    'user_id' => $user_id,
+                    'master_id' => $user_id,
+                    'user_name' => $user->user_name,
+                    'mobile' => $user->mobile,
+                    'source' => $user->source,
+                    'created_at' => date('Y-m-d H:i:s', time())
+                ];
+                JfUserNoAnswer::query()->insert($data);
+                JfUserExcel::query()->where('id', $id)->delete();
+            } else {
+                //有通话时间的，如果未转入意向客户，就转入公海
+                $user = JfUserExcel::query()->find($id);
+                if ($user) {
+                    $data = [
+                        'web_id' => $web_id,
+                        'user_id' => $user_id,
+                        'master_id' => $user_id,
+                        'user_name' => $user->user_name,
+                        'mobile' => $user->mobile,
+                        'source' => $user->source,
+                        'created_at' => date('Y-m-d H:i:s', time())
+                    ];
+                    JfUserPublic::query()->insert($data);
+                    JfUserExcel::query()->where('id', $id)->delete();
+                }
             }
         }
     }
@@ -176,30 +239,5 @@ class ApiController extends AdminController
         } else {
             return 0;
         }
-    }
-
-    public function addUserCallRecord(Request $request)
-    {
-        $inputs = $request->all();
-        $id = $inputs['id'];
-        $record = $inputs['record'];
-        $user_id = static::userId();
-        $web_id = static::webId();
-        $table_name = isset($inputs['table_name']) && $inputs['table_name'] ? $inputs['table_name'] : '';
-        if (!$table_name) {
-            $table_name = 'jf_user_excel';
-        }
-        $user = DB::table($table_name)->where('id', $id)->first();
-        $data = [
-            'web_id' => $web_id,
-            'user_id' => $user_id,
-            'user_name' => $user->user_name,
-            'mobile' => $user->mobile,
-            'created_at' => date('Y-m-d H:i:s', time()),
-            'table_id' => $id,
-            'table_name' => $table_name,
-            'record_url' => env('QINIU_YUMING') . '/' . $record . '.mp3'
-        ];
-        DB::table('jf_talk_log')->insert($data);
     }
 }

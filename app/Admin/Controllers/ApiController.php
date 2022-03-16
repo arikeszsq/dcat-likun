@@ -78,6 +78,16 @@ class ApiController extends AdminController
         $inputs = $request->all();
         $user_id = static::userId();
         $web_id = static::webId();
+        $tag_id = [];
+        if (isset($inputs['select_tag_ids']) && $inputs['select_tag_ids']) {
+            $tag_ids = explode(',', $inputs['select_tag_ids']);
+            foreach ($tag_ids as $id) {
+                if ($id) {
+                    $tag_id[] = $id;
+                }
+            }
+        }
+        $tag_id_string = implode(',', $tag_id);
         $data = [
             'web_id' => $web_id,
             'user_id' => $user_id,
@@ -85,6 +95,8 @@ class ApiController extends AdminController
             'company_name' => isset($inputs['company_name']) && $inputs['company_name'] ? $inputs['company_name'] : '',
             'user_name' => isset($inputs['user_name']) && $inputs['user_name'] ? $inputs['user_name'] : '',
             'mobile' => isset($inputs['mobile']) && $inputs['mobile'] ? $inputs['mobile'] : '',
+            'source' => isset($inputs['source']) && $inputs['source'] ? $inputs['source'] : '',
+            'select_tag_ids' => $tag_id_string,
             'type' => isset($inputs['type']) && $inputs['type'] ? $inputs['type'] : '',
             'bak' => isset($inputs['bak']) && $inputs['bak'] ? $inputs['bak'] : '',
             'created_at' => date('Y-m-d H:i:s', time()),

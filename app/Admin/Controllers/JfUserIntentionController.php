@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\JfUserIntention;
+use App\Models\Tag;
 use App\Traits\UserTrait;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -13,7 +14,7 @@ class JfUserIntentionController extends AdminController
 {
     use UserTrait;
 
-    public $title='意向客户';
+    public $title = '意向客户';
 
     /**
      * Make a grid builder.
@@ -33,9 +34,9 @@ class JfUserIntentionController extends AdminController
             $grid->model()->orderBy('id', 'desc');
             $grid->column('id', __('Id'))->sortable();
 
-            $grid->column('user_name','姓名');
-            $grid->column('mobile','手机号');
-            $grid->column('company_name','公司名称');
+            $grid->column('user_name', '姓名');
+            $grid->column('mobile', '手机号');
+            $grid->column('company_name', '公司名称');
 
 
             $grid->filter(function (Grid\Filter $filter) {
@@ -56,12 +57,11 @@ class JfUserIntentionController extends AdminController
     {
         return Show::make($id, new JfUserIntention(), function (Show $show) {
             $show->field('id');
-            $show->field('user_name','姓名');
-            $show->field('mobile','手机号');
-            $show->field('company_name','公司名称');
+            $show->field('user_name', '姓名');
+            $show->field('mobile', '手机号');
+            $show->field('company_name', '公司名称');
 
             $show->field('type');
-            $show->field('status');
             $show->field('bak');
             $show->field('created_at');
             $show->field('updated_at');
@@ -80,11 +80,29 @@ class JfUserIntentionController extends AdminController
             $form->text('company_name');
             $form->text('user_name');
             $form->mobile('mobile');
-            $form->text('wechat');
-            $form->text('qq');
-            $form->text('type');
-            $form->text('status');
+            $form->select('type', '客户类型')->options([
+                'A' => 'A',
+                'B' => 'B',
+                'C' => 'C',
+                'D' => 'D',
+            ]);
             $form->text('bak');
+
+            $tags = Tag::query()->orderBy('id', 'desc')
+                ->where('web_id', self::webId())
+                ->get();
+            $tags_array = [];
+            foreach ($tags as $tag)
+            {
+                $tags_array[$tag->id]=$tag->name;
+            }
+
+            $form->multipleSelect('select_tag_ids', '标签')
+                ->options($tags_array)
+                ->saving(function ($value) {
+                    // 转化成json字符串保存到数据库
+                    return json_encode($value);
+                });
 
             $form->hidden('created_at');
             $form->hidden('updated_at');

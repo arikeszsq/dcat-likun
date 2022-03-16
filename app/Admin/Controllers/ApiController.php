@@ -87,7 +87,7 @@ class ApiController extends AdminController
                 }
             }
         }
-        $tag_id_string = implode(',', $tag_id);
+        $tag_id_string = json_encode($tag_id);
         $data = [
             'web_id' => $web_id,
             'user_id' => $user_id,

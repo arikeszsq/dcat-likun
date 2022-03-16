@@ -198,6 +198,7 @@ class ApiController extends AdminController
                     'user_id' => $user_id,
                     'master_id' => $user_id,
                     'user_name' => $user->user_name,
+                    'company_name' => $user->company_name,
                     'mobile' => $user->mobile,
                     'source' => $user->source,
                     'created_at' => date('Y-m-d H:i:s', time())
@@ -213,6 +214,7 @@ class ApiController extends AdminController
                         'user_id' => $user_id,
                         'master_id' => $user_id,
                         'user_name' => $user->user_name,
+                        'company_name' => $user->company_name,
                         'mobile' => $user->mobile,
                         'source' => $user->source,
                         'created_at' => date('Y-m-d H:i:s', time())

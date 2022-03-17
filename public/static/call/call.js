@@ -7,7 +7,6 @@ function Call(number) {
         success: function (res) {
             var code = res.msg_code;
             if (code === 100000) {
-
                 //查询是否需要切卡
                 var rolling_time_set = $('#rolling_time').val();
                 var next_num_set = $('#next_num').val();
@@ -15,10 +14,9 @@ function Call(number) {
                 if (!next_num) {
                     next_num = 1;
                 }
-
                 if (parseInt(next_num) >= parseInt(next_num_set)) {
-                    useNextSimAndCall(number);
-                }else{
+                    useNextSimAndCall();
+                } else {
                     var next_num_incr = parseInt(next_num) + 1;
                     addCookie('next_sim_num', next_num_incr);
 
@@ -77,6 +75,41 @@ function Call(number) {
                                 ajaxSync(id, cdr);
                             }
                         }
+
+                        //接收到话机信息查询的回调，注意message 和name，代表不同类型的查询
+                        if (message == 'query' && name == 'Device') {
+                            var param_busy = data.param;
+                            var CurrentSim = param_busy.CurrentSim;
+                            console.log('正在使用卡槽：', CurrentSim);
+                            if (param_busy.DeviceBusy == 'busy') {
+                                //切卡之后，每四秒查询一次话机状态，十次之后，还是不对，直接报错
+                                var tel_search_num = getCookie('tel_search_num');
+                                if (!tel_search_num) {
+                                    tel_search_num = 1;
+                                }
+                                if (parseInt(tel_search_num) >= 20) {
+                                    $('.notice_call').html('卡槽【' + CurrentSim + '】话机换卡重启失败，请刷新重试');
+                                    addCookie('tel_search_num', 1);
+                                } else {
+                                    var next_tel_search_num = parseInt(tel_search_num) + 1;
+                                    addCookie('tel_search_num', next_tel_search_num);
+
+                                    $('.notice_call').html('话机正在重启，请稍等');
+                                    setTimeout(function () {
+                                        console.log('3s后再次开始查询话机状态接口');
+                                        searchstatus();//3秒后查询话机状态
+                                    }, 3000);
+                                }
+                            }
+                            if (param_busy.DeviceBusy == 'idle') {
+                                $('.notice_call').html('卡槽【' + CurrentSim + '】设备状态空闲，开始拨号');
+                                console.log('卡槽【' + CurrentSim + '】设备状态空闲，可以拨号');
+                                console.log('换卡完成，开始拨号');
+                                addCookie('next_sim_num', 0);
+                                Call(number);
+                            }
+                        }
+
                     };
                     //发生错误
                     ws.onerror = function () {
@@ -97,18 +130,13 @@ function Call(number) {
 }
 
 
-
-function useNextSimAndCall(number) {
+function useNextSimAndCall() {
     //需要设备空闲的时候，才可以换卡
-    console.log('正在切换另一张卡，电话正在重启，请稍等60秒左右');
-    $('.notice_call').html('正在切换另一张卡，电话正在重启，请稍等60秒左右');
-    hangup();
+    console.log('正在切换另一张卡，电话正在重启');
+    $('.notice_call').html('正在切换另一张卡，电话正在重启，请稍等');
+    useNextSim();
     setTimeout(function () {
-        useNextSim();//1秒后，开始换卡
-    }, 1000);
-    setTimeout(function () {
-        addCookie('next_sim_num', 0);
-        Call(number);//6000毫秒后,切换完卡，开始拨号
-    }, 60000);
-
+        console.log('开始查询话机状态接口');
+        searchstatus();
+    }, 20000);
 }

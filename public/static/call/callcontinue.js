@@ -1,8 +1,11 @@
 function CallContinue(keyId) {
     var id_name = '#user-mobile-' + keyId;
     var number = $(id_name).val();
-    console.log(id_name, number);
-
+    if (!number) {
+        $('.notice_call').html('全部号码已经拨打完成');
+        console.log('全部号码已经拨打完成');
+        return false;
+    }
     $.ajax({
         type: "POST",
         dataType: 'json',
@@ -20,7 +23,7 @@ function CallContinue(keyId) {
                 }
 
                 if (parseInt(next_num) >= parseInt(next_num_set)) {
-                    useNextSimAndContinue(keyId);
+                    useNextSimAndContinue();
                 } else {
                     var next_num_incr = parseInt(next_num) + 1;
                     addCookie('next_sim_num', next_num_incr);
@@ -34,7 +37,7 @@ function CallContinue(keyId) {
                     console.log('stop', stop);
                     if (stop) {
                         $('.notice_call').html('停止连续拨号');
-                        console.log('已停止连续拨号666666666666666');
+                        console.log('已停止连续拨号');
                         return false;
                     }
                     if (number) {
@@ -66,9 +69,7 @@ function CallContinue(keyId) {
                                 var param = data.param;
                                 console.log(param);
                                 if (param.status == 'CallStart') {
-
                                     console.log("开始拨号，开始通话");
-
                                     //开始计时，到时间未接通直接挂断
                                     addCookie('noanswer', 1);
                                     setTimeout(function () {
@@ -105,42 +106,42 @@ function CallContinue(keyId) {
                                 }
                             }
 
-                            if (message == 'update' && name == 'Device') {
+                            //接收到话机信息查询的回调，注意message 和name，代表不同类型的查询
+                            if (message == 'query' && name == 'Device') {
+                                console.log('接收到查询话机的返回');
                                 var param_busy = data.param;
-
                                 console.log('data：', data);
                                 console.log('param_busy：', param_busy);
-
                                 var CurrentSim = param_busy.CurrentSim;
                                 console.log('正在使用卡槽：', CurrentSim);
                                 // console.log('话机状态正忙：', param_busy);
                                 if (param_busy.DeviceBusy == 'busy') {
+                                    //切卡之后，每四秒查询一次话机状态，十次之后，还是不对，直接报错
+                                    var tel_search_num = getCookie('tel_search_num');
+                                    if (!tel_search_num) {
+                                        tel_search_num = 1;
+                                    }
+                                    if (parseInt(tel_search_num) >= 20) {
+                                        $('.notice_call').html('卡槽【' + CurrentSim + '】话机换卡重启失败，请刷新重试');
+                                        addCookie('tel_search_num', 1);
+                                    } else {
+                                        var next_tel_search_num = parseInt(tel_search_num) + 1;
+                                        addCookie('tel_search_num', next_tel_search_num);
 
-                                    // //切卡之后，每四秒查询一次话机状态，十次之后，还是不对，直接报错
-                                    // var tel_search_num = getCookie('tel_search_num');
-                                    // if (!tel_search_num) {
-                                    //     tel_search_num = 1;
-                                    // }
-                                    //
-                                    // if (parseInt(tel_search_num) >= 10) {
-                                    //     $('.notice_call').html('卡槽【' + CurrentSim + '】话机换卡重启失败，请刷新重试');
-                                    // } else {
-                                    //     var next_tel_search_num = parseInt(tel_search_num) + 1;
-                                    //     addCookie('tel_search_num', next_tel_search_num);
-                                    //
-                                    //     $('.notice_call').html('话机正在重启，请稍等');
-                                    //     setTimeout(function () {
-                                    //         searchstatus();//3秒后查询话机状态
-                                    //     }, 3000);
-                                    // }
-
-
+                                        $('.notice_call').html('话机正在重启，请稍等');
+                                        setTimeout(function () {
+                                            console.log('3s后再次开始查询话机状态接口');
+                                            searchstatus();//3秒后查询话机状态
+                                        }, 3000);
+                                    }
                                 }
                                 if (param_busy.DeviceBusy == 'idle') {
-                                    // $('.notice_call').html('卡槽【' + CurrentSim + '】设备状态空闲，可以拨号');
+                                    $('.notice_call').html('卡槽【' + CurrentSim + '】设备状态空闲，开始拨号');
                                     console.log('卡槽【' + CurrentSim + '】设备状态空闲，可以拨号');
+                                    console.log('换卡完成，开始拨号');
+                                    addCookie('next_sim_num', 0);
+                                    CallContinue((keyId + 1));
                                 }
-
                             }
                         };
                         //发生错误
@@ -162,18 +163,15 @@ function CallContinue(keyId) {
 
 }
 
-function useNextSimAndContinue(keyId) {
+function useNextSimAndContinue() {
     //需要设备空闲的时候，才可以换卡
-    hangup();
     console.log('正在切换另一张卡，电话正在重启，请稍等60秒左右');
     $('.notice_call').html('正在切换另一张卡，电话正在重启，请稍等60秒左右');
+    //调用换卡接口
+    useNextSim();
+    //延迟5秒后调用查询话机状态接口
     setTimeout(function () {
-        useNextSim();//1秒后，开始换卡
-    }, 1000);
-
-    setTimeout(function () {
-        addCookie('next_sim_num', 0);
-        CallContinue(keyId);//60000毫秒后,切换完卡，开始拨号
-    }, 60000);
-
+        console.log('开始查询话机状态接口');
+        searchstatus();
+    }, 20000);
 }

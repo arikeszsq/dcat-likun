@@ -7,7 +7,7 @@ function CallContinue(keyId) {
         type: "POST",
         dataType: 'json',
         url: "/admin/verify-mobile",
-        data: {'number': number},
+        data: {'mobile': number},
         success: function (res) {
             var code = res.msg_code;
             if (code === 100000) {

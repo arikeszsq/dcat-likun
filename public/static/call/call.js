@@ -15,8 +15,7 @@ function Call(number) {
                 if (!next_num) {
                     next_num = 1;
                 } else if (parseInt(next_num) >= parseInt(next_num_set)) {
-                    var notice = '正在切换另一张卡，电话正在重启，请稍等60秒左右';
-                    $('.notice_call').html(notice);
+                    $('.notice_call').html( '正在切换另一张卡，电话正在重启，请稍等60秒左右');
                     useNextSim();
                     addCookie('next_sim_num', 0);
                     setTimeout(function () {

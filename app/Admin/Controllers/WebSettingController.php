@@ -14,6 +14,8 @@ class WebSettingController extends AdminController
 {
     use UserTrait;
 
+    public $title = '基础配置';
+
     /**
      * Make a grid builder.
      *
@@ -36,6 +38,7 @@ class WebSettingController extends AdminController
             $grid->column('protect_day', '防骚扰(次/日)');
             $grid->column('protect_week', '防骚扰(周/日)');
             $grid->column('protect_month', '防骚扰(月/日)');
+            $grid->column('next_num', '每张卡使用次数后切换');
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
@@ -59,6 +62,7 @@ class WebSettingController extends AdminController
             $show->field('protect_day', '防骚扰(次/日)');
             $show->field('protect_week', '防骚扰(周/日)');
             $show->field('protect_month', '防骚扰(月/日)');
+            $show->field('next_num', '每张卡使用次数后切换');
             $show->field('created_at', '创建时间');
             $show->field('updated_at', '更新时间');
         });
@@ -78,6 +82,7 @@ class WebSettingController extends AdminController
             $form->number('protect_day', '防骚扰(次/日)');
             $form->number('protect_week', '防骚扰(周/日)');
             $form->number('protect_month', '防骚扰(月/日)');
+            $form->number('next_num', '每张卡使用次数后切换');
 
             $form->hidden('created_at');
             $form->hidden('updated_at');

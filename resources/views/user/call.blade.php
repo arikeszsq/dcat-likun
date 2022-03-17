@@ -8,6 +8,7 @@
 <script src="/static/call/initandupload.js"></script>
 <script src="/static/call/hangupcookienext.js"></script>
 <script src="/static/call/callcontinue.js"></script>
+<script src="/static/call/searchtelstatus.js"></script>
 
 <div class="con_a_w">
     <div class="con_a">

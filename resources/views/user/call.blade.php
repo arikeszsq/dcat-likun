@@ -3,6 +3,11 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 
 <script src="/static/call/addintention.js"></script>
+<script src="/static/call/call.js"></script>
+<script src="/static/call/ajaxfunction.js"></script>
+<script src="/static/call/initandupload.js"></script>
+<script src="/static/call/hangupcookienext.js"></script>
+<script src="/static/call/callcontinue.js"></script>
 
 <div class="con_a_w">
     <div class="con_a">
@@ -89,6 +94,8 @@
                             <input type="hidden" id="valid_time" value="{{$valid_time}}">
                             <input type="hidden" id="next_num" value="{{$next_num}}">
 
+                            <input type="hidden" id="verify_mobile_can_call" value="1">
+
                         </form>
 
                         <div class="container_zong biaoqian_a">
@@ -139,19 +146,15 @@
             $(this).addClass('khlb_01');
         }
     });
-    //转为意向客户
+
+    //添加意向客户意向客户
     $('#set_intention_user').click(function () {
         addTention();
     });
 
-
     //初始化设备
     var callout_cb;
     init();
-
-    function init() {
-        getWebsocket();
-    }
 
     //点击右侧列表，把信息传到表单
     $('.user-info').click(function () {
@@ -178,7 +181,7 @@
 
     //单独挂机
     $('#hangup').click(function () {
-        hangup()
+        hangup();
     });
 
     //连续拨号
@@ -193,159 +196,6 @@
         $('#stop_continue_call').val(1);
     });
 
-    function CallContinue(keyId) {
-        var id_name = '#user-mobile-' + keyId;
-        var number = $(id_name).val();
-        console.log(id_name, number);
-        var can_call = verifyMobile(number);
-        if (!can_call) {
-            $('.notice_call').html('该号码' + number + '已设置了防骚扰，不可以拨打');
-            CallContinue((keyId + 1));
-        }
-
-        //到了换卡次数之后，开始延迟等待话机重启后拨号
-        var next_num_set = $('#next_num').val();
-        var next_num = getCookie('next_sim_num');
-        if (!next_num) {
-            next_num = 1;
-        } else if (parseInt(next_num) >= parseInt(next_num_set)) {
-            var notice = '正在切换另一张卡，电话正在重启，请稍等60秒左右';
-            $('.notice_call').html(notice);
-            useNextSim();
-            addCookie('next_sim_num', 0);
-            setTimeout(function () {
-                CallContinue(keyId);//6000毫秒后,切换完卡，开始拨号
-            }, 60000)
-        }
-        var next_num_incr = parseInt(next_num) + 1;
-        addCookie('next_sim_num', next_num_incr);
-
-
-        if (!ws) {
-            alert("控件未初始化");
-            return false;
-        }
-        var rolling_time_set = $('#rolling_time').val();
-        $('.notice_call').html('开始连续拨号');
-        var stop = $('#stop_continue_call').val();
-        console.log(stop);
-        if (stop) {
-            $('.notice_call').html('停止连续拨号');
-            console.log('停止连续拨号');
-            return false;
-        }
-        if (number) {
-            var company_name = $(id_name).parent().data('company_name');
-            var user_name = $(id_name).parent().data('user_name');
-            var mobile = $(id_name).parent().data('mobile');
-            $('.form-company-name').val(company_name);
-            $('.form-user-name').val(user_name);
-            $('.form-mobile').val(mobile);
-            var excel_user_id = $(id_name).parent().data('id');
-            $('#excel-user_id').val(excel_user_id);
-
-            callout_cb = 'CallOut_cb_' + new Date().getTime();
-            var action = {
-                action: 'CallOut',
-                number: number,
-                cb: callout_cb
-            };
-            ws.send(JSON.stringify(action));
-            //收到服务端消息
-            ws.onmessage = function (event) {
-                console.log(event.data);
-                var data = JSON.parse(event.data);
-                var message = data.message;
-                var name = data.name;
-                var id = $('#excel-user_id').val();
-                var record = '';
-                if (message == 'update' && name == 'Call') {
-                    var param = data.param;
-                    console.log(param);
-                    if (param.status == 'CallStart') {
-
-
-                        console.log("开始拨号，开始通话");
-                        //开始计时，到时间未接通直接挂断
-                        addCookie('noanswer', 1);
-                        setTimeout(function () {
-                            var noanswer = parseInt(getCookie('noanswer'));
-                            if (noanswer == 1) {
-                                hangup();
-                            }
-                        }, (rolling_time_set * 1000));
-
-
-                        $('.notice_call').html('拨号中：' + number);
-                        //拨号之后把手机号码置空
-                        $(id_name).val('');
-                        $(id_name).parent().addClass('on_a');
-                        record = param.time;
-                        ajaxRecordSync(id, record, 'jf_user_excel');
-                        uploadFile();
-                    } else if (param.status == 'TalkingStart') {
-                        console.log("开始通话语音");
-                        addCookie('noanswer', 2);
-                    } else if (param.status == 'TalkingEnd') {
-                        console.log("语音结束");
-                    } else if (param.status == 'CallEnd') {
-                        console.log("通话结束：");
-                        $('.notice_call').html('');
-                        var id_val_name = '#user-id-' + keyId;
-                        var cdr = param.CDR;
-                        // var result = cdr.substring(1, 10);
-                        // if (result == 'Succeeded') {
-                        // }
-                        ajaxSync(id, cdr); //通话之后，通知后端这个号码已经拨打过，是否拨通和通话时间，从cdr里面获取
-                        setTimeout(function () {
-                            CallContinue((keyId + 1));//800毫秒后自动拨打下一个
-                        }, 800)
-                    }
-                }
-            };
-            //发生错误
-            ws.onerror = function () {
-                console.log("error");
-            }
-        }
-    }
-
-    function verifyMobile(mobile) {
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: "/admin/verify-mobile",
-            data: {'mobile': mobile},
-            success(res) {
-                var code = res.msg_code;
-                if (code == 100000) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-    }
-
-    function ajaxSync(id, cdr) {
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: "/admin/call-back",
-            data: {'id': id, 'cdr': cdr}
-        });
-    }
-
-    function ajaxRecordSync(id, record, table_name) {
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: "/admin/add-call-record",
-            data: {'id': id, 'record': record, 'table_name': table_name}
-        });
-    }
-
-
     //主动切换下一张卡拨号
     $('#next').click(function () {
         ws.send(JSON.stringify({action: 'SimNext', cb: new Date().getTime()}));
@@ -357,157 +207,6 @@
         }
     });
 
-    function useNextSim() {
-        ws.send(JSON.stringify({action: 'SimNext', cb: new Date().getTime()}));
-    }
 
-
-    function addCookie(name, value) {
-        localStorage.setItem(name, value);
-    }
-
-    function delCookie(name) {
-        localStorage.removeItem(name);
-    }
-
-    function getCookie(name) {
-        return localStorage.getItem(name);
-    }
-
-    function Call(number) {
-
-
-        var can_call = verifyMobile(number);
-        if (!can_call) {
-            $('.notice_call').html('该号码已设置了防骚扰，不可以拨打');
-            return false;
-        }
-
-        var rolling_time_set = $('#rolling_time').val();
-
-        var next_num_set = $('#next_num').val();
-        var next_num = getCookie('next_sim_num');
-        if (!next_num) {
-            next_num = 1;
-        } else if (parseInt(next_num) >= parseInt(next_num_set)) {
-            var notice = '正在切换另一张卡，电话正在重启，请稍等60秒左右';
-            $('.notice_call').html(notice);
-            useNextSim();
-            addCookie('next_sim_num', 0);
-            setTimeout(function () {
-                Call(number);//6000毫秒后,切换完卡，开始拨号
-            }, 60000)
-        }
-        var next_num_incr = parseInt(next_num) + 1;
-        addCookie('next_sim_num', next_num_incr);
-
-
-        if (!ws) {
-            alert("控件未初始化");
-            return false;
-        }
-        $('.notice_call').html('开始拨号');
-        callout_cb = 'CallOut_cb_' + new Date().getTime();
-
-
-        var action = {
-            action: 'CallOut',
-            number: number,
-            cb: callout_cb
-        };
-        ws.send(JSON.stringify(action));
-        //收到服务端消息
-        ws.onmessage = function (event) {
-            console.log(event.data);
-            var data = JSON.parse(event.data);
-            var message = data.message;
-            var name = data.name;
-            var id = $('#excel-user_id').val();
-            var record = '';
-            if (message == 'update' && name == 'Call') {
-                var param = data.param;
-                console.log(param);
-                if (param.status == 'CallStart') {
-
-                    console.log("开始拨号，开始通话");
-                    //开始计时，到时间未接通直接挂断
-                    addCookie('noanswer', 1);
-                    setTimeout(function () {
-                        var noanswer = parseInt(getCookie('noanswer'));
-                        if (noanswer == 1) {
-                            hangup();
-                        }
-                    }, (rolling_time_set * 1000));
-
-                    record = param.time;
-                    ajaxRecordSync(id, record, 'jf_user_excel');
-                    uploadFile();
-                    $('.notice_call').html('拨号中：' + number);
-                    var id_name = '#user-mobile-' + id;
-                    $(id_name).val('');
-                    $(id_name).parent().addClass('on_a');
-                } else if (param.status == 'TalkingStart') {
-                    console.log("开始通话语音");
-                    addCookie('noanswer', 2);
-                } else if (param.status == 'TalkingEnd') {
-                    console.log("语音结束");
-                } else if (param.status == 'CallEnd') {
-                    console.log("通话结束/或者挂断事件");
-                    $('.notice_call').html('');
-                    var cdr = param.CDR;
-                    //通话之后，通知后端这个号码已经拨打过，是否拨通和通话时间，从cdr里面获取
-                    ajaxSync(id, cdr);
-                }
-            }
-        };
-        //发生错误
-        ws.onerror = function () {
-            console.log("error");
-        }
-    }
-
-    function uploadFile() {
-        ws.send(
-            JSON.stringify({
-                action: 'Settings',
-                settings: {
-                    upload: {
-                        api: 'http://tk.lianshuiweb.com/api/upload-file',//http://tk.lianshuiweb.com/api/upload-file
-                        flag: 'token-1234-123',
-                        file: '1',
-                        qiniu: {
-                            AccessKey: 'Bz7rahQAQVdmp-6wYw50zNKO2JPh52fIUrNCtwjq',
-                            SecretKey: 'Pj_qaxfs9earPgwiiE_ys3OaFvB3xKunwgcYrieD',
-                            Zone: 'Zone_z0',//华东
-                            Bucket: '123456adsf'
-                        }
-                    }
-                },
-                cb: new Date().getTime()
-            })
-        );
-    }
-
-    function getWebsocket() {
-        ws = new WebSocket('ws://127.0.0.1:8090/APP_2AD85C71-BEF8-463C-9B4B-B672F603542A_fast');
-        ws.onerror = function (event) {
-            alert('初始化设备失败：' + event.data);
-        };
-        ws.onclose = function (event) {
-        };
-        ws.onopen = function () {
-            console.log('初始化设备成功');
-        }
-    }
-
-    function hangup() {
-        ws.send(JSON.stringify({action: 'Hangup', cb: new Date().getTime()}));
-        ws.onmessage = function (event) {
-            console.log("message", event.data);
-        };
-        ws.onerror = function () {
-            console.log("error");
-        }
-    }
 </script>
 

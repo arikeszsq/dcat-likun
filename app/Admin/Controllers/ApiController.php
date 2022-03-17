@@ -59,17 +59,17 @@ class ApiController extends AdminController
         }
 
         if ($day_redis_num > $day_num) {
-            return self::fail();
+            return self::fail('日呼叫防护');
         } else {
             Redis::incr($mobile_day);
         }
         if ($week_redis_num > $week_num) {
-            return self::fail();
+            return self::fail('周呼叫防护');
         } else {
             Redis::incr($mobile_week);
         }
         if ($month_redis_num > $month_num) {
-            return self::fail();
+            return self::fail('月呼叫防护');
         } else {
             Redis::incr($mobile_month);
         }

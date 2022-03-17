@@ -7,6 +7,8 @@ function Call(number) {
         success: function (res) {
             var code = res.msg_code;
             if (code === 100000) {
+
+                //查询是否需要切卡
                 var rolling_time_set = $('#rolling_time').val();
                 var next_num_set = $('#next_num').val();
                 var next_num = getCookie('next_sim_num');
@@ -31,8 +33,6 @@ function Call(number) {
                 }
                 $('.notice_call').html('开始拨号');
                 callout_cb = 'CallOut_cb_' + new Date().getTime();
-
-
                 var action = {
                     action: 'CallOut',
                     number: number,
@@ -51,8 +51,8 @@ function Call(number) {
                         var param = data.param;
                         console.log(param);
                         if (param.status == 'CallStart') {
-
                             console.log("开始拨号，开始通话");
+
                             //开始计时，到时间未接通直接挂断
                             addCookie('noanswer', 1);
                             setTimeout(function () {
@@ -86,15 +86,15 @@ function Call(number) {
                 //发生错误
                 ws.onerror = function () {
                     console.log("error");
-                }
+                };
             }
             if (code === 200000) {
                 $('.notice_call').html('号码' + number + '已设置了防骚扰，不可以拨打');
                 return false;
             }
         },
-        error:function (res) {
-            console.log(res)
+        error: function (res) {
+            console.log(res);
         }
     });
 

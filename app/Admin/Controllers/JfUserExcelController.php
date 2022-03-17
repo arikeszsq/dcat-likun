@@ -43,6 +43,7 @@ class JfUserExcelController extends AdminController
             $grid->column('user_name', '姓名');
             $grid->column('mobile', '手机号');
             $grid->column('company_name', '公司名称');
+            $grid->column('source', '来源');
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
@@ -74,9 +75,7 @@ class JfUserExcelController extends AdminController
             $show->field('user_name', '姓名');
             $show->field('mobile', '手机号');
             $show->field('company_name', '公司名称');
-
-            $show->field('status');
-            $show->field('call_no');
+            $show->field('source', '来源');
             $show->field('created_at');
             $show->field('updated_at');
         });
@@ -94,18 +93,19 @@ class JfUserExcelController extends AdminController
             $form->text('company_name');
             $form->text('user_name');
             $form->mobile('mobile');
-            $form->text('status');
-            $form->text('call_no');
+            $form->text('source', '来源');
 
             $form->hidden('created_at');
             $form->hidden('updated_at');
             $form->hidden('web_id');
             $form->hidden('user_id');
+            $form->hidden('master_id');
             $form->saving(function (Form $form) {
                 if ($form->isCreating()) {
                     $form->created_at = date('Y-m-d H:i:s');
                     $form->web_id = self::webId();
                     $form->user_id = self::userId();
+                    $form->master_id = self::userId();
                 } else {
                     $form->updated_at = date('Y-m-d H:i:s');
                 }

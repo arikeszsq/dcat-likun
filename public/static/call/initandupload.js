@@ -33,5 +33,5 @@ function getWebsocket() {
     };
     ws.onopen = function () {
         console.log('初始化设备成功');
-    }
+    };
 }

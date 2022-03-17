@@ -165,8 +165,8 @@ function CallContinue(keyId) {
 
 function useNextSimAndContinue() {
     //需要设备空闲的时候，才可以换卡
-    console.log('正在切换另一张卡，电话正在重启，请稍等60秒左右');
-    $('.notice_call').html('正在切换另一张卡，电话正在重启，请稍等60秒左右');
+    console.log('正在切换另一张卡，电话正在重启');
+    $('.notice_call').html('正在切换另一张卡，电话正在重启，请稍等');
     //调用换卡接口
     useNextSim();
     //延迟5秒后调用查询话机状态接口

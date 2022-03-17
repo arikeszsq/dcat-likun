@@ -194,6 +194,7 @@
     //停止连续拨号
     $('#batch_hangup').click(function () {
         hangup();
+        $('.notice_call').html('已停止连续拨号');
         $('#stop_continue_call').val(1);
     });
 

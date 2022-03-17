@@ -113,23 +113,25 @@ function CallContinue(keyId) {
                             console.log('话机状态正忙：', param_busy);
                             if (param_busy.DeviceBusy == 'busy') {
 
-                                //切卡之后，每四秒查询一次话机状态，十次之后，还是不对，直接报错
-                                var tel_search_num = getCookie('tel_search_num');
-                                if (!tel_search_num) {
-                                    tel_search_num = 1;
-                                }
+                                // //切卡之后，每四秒查询一次话机状态，十次之后，还是不对，直接报错
+                                // var tel_search_num = getCookie('tel_search_num');
+                                // if (!tel_search_num) {
+                                //     tel_search_num = 1;
+                                // }
+                                //
+                                // if (parseInt(tel_search_num) >= 10) {
+                                //     $('.notice_call').html('卡槽【' + CurrentSim + '】话机换卡重启失败，请刷新重试');
+                                // } else {
+                                //     var next_tel_search_num = parseInt(tel_search_num) + 1;
+                                //     addCookie('tel_search_num', next_tel_search_num);
+                                //
+                                //     $('.notice_call').html('话机正在重启，请稍等');
+                                //     setTimeout(function () {
+                                //         searchstatus();//3秒后查询话机状态
+                                //     }, 3000);
+                                // }
 
-                                if (parseInt(tel_search_num) >= 10) {
-                                    $('.notice_call').html('卡槽【' + CurrentSim + '】话机换卡重启失败，请刷新重试');
-                                } else {
-                                    var next_tel_search_num = parseInt(tel_search_num) + 1;
-                                    addCookie('tel_search_num', next_tel_search_num);
 
-                                    $('.notice_call').html('话机正在重启，请稍等');
-                                    setTimeout(function () {
-                                        searchstatus();//3秒后查询话机状态
-                                    }, 3000);
-                                }
                             }
                             if (param_busy.DeviceBusy == 'idle') {
 

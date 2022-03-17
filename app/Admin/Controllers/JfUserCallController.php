@@ -41,9 +41,8 @@ class JfUserCallController extends Controller
         $web_id = static::webId();
         $user_id = static::userId();
         $users = JfUserExcel::query()
-//            ->where('web_id',$web_id)
-//            ->where('master_id',$user_id)
-//            ->where('call_no', 0)
+            ->where('web_id',$web_id)
+            ->where('master_id',$user_id)
             ->orderBy('id', 'desc')
             ->limit(200)
             ->get();

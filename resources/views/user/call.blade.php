@@ -2,13 +2,11 @@
 <link rel="stylesheet" href="/static/call/call.css">
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 
-<script src="/static/call/addintention.js"></script>
+<script src="/static/call/api.js"></script>
 <script src="/static/call/call.js"></script>
-<script src="/static/call/ajaxfunction.js"></script>
-<script src="/static/call/initandupload.js"></script>
-<script src="/static/call/hangupcookienext.js"></script>
 <script src="/static/call/callcontinue.js"></script>
-<script src="/static/call/searchtelstatus.js"></script>
+<script src="/static/call/caller.js"></script>
+<script src="/static/call/click.js"></script>
 
 <div class="con_a_w">
     <div class="con_a">
@@ -97,6 +95,7 @@
                             <input type="hidden" id="valid_time" value="{{$valid_time}}">
                             <input type="hidden" id="next_num" value="{{$next_num}}">
                             <input type="hidden" id="tell_no_line" value="1">
+                            <input type="hidden" id="hid_key_id" value="0">
 
                             <input type="hidden" id="verify_mobile_can_call" value="1">
 
@@ -137,33 +136,132 @@
     </div>
 </div>
 <script>
-    $('.nb_type').click(function () {
-        $(this).addClass('khlb_user_type').siblings().removeClass('khlb_user_type');
-    });
-    $('.nb_tag').click(function () {
-        var nb_val = $(this).data('select');
-        if (nb_val == 1) {
-            $(this).data('select', 2);
-            $(this).removeClass('khlb_01');
-        } else {
-            $(this).data('select', 1);
-            $(this).addClass('khlb_01');
-        }
-    });
-
-    //添加意向客户意向客户
-    $('#set_intention_user').click(function () {
-        addTention();
-    });
-
-    //初始化设备
     var callout_cb;
     init();
 
     function init() {
         $('.content-header').remove();
+        //初始化驱动，查询电话机是否连接
         getWebsocket();
     }
+
+    ws.onmessage = function (event) {
+        console.log('服务器消息：', event.data);
+        var data = JSON.parse(event.data);
+        var message = data.message;
+        var name = data.name;
+
+        var tabel_user_excel_id = $('#excel-user_id').val();
+        var record = '';
+        var call_type = getCookie('call_type');
+        var keyId = 0;
+
+        if (message == 'update' && name == 'Call') {
+            var param = data.param;
+            if (param.status == 'CallStart') {
+                //开始计时，到时间未接通直接挂断
+                addCookie('noanswer', 1);
+                var rolling_time_set = $('#rolling_time').val();
+                setTimeout(function () {
+                    var noanswer = parseInt(getCookie('noanswer'));
+                    if (noanswer == 1) {
+                        hangup();
+                    }
+                }, (rolling_time_set * 1000));
+
+                //拨号之后把手机号码置空
+                if (call_type === 'continue_call') {
+                    keyId = getCookie('continue_call_keyId');
+                    var id_name = '#user-mobile-' + keyId;
+                    $(id_name).val('');
+                    $(id_name).parent().addClass('on_a');
+                } else {
+                    //这里p_keyId重命名，是怕keyId被p_keyId单独拨号覆盖了
+                    var p_keyId = $('#hid_key_id').val();
+                    var p_id_name = '#user-mobile-' + p_keyId;
+                    $(p_id_name).val('');
+                    $(p_id_name).parent().addClass('on_a');
+                }
+
+                record = param.time;
+                ajaxRecordSync(tabel_user_excel_id, record, 'jf_user_excel');
+                uploadFile();
+            } else if (param.status == 'TalkingStart') {
+                console.log("开始通话语音");
+                addCookie('noanswer', 2);
+            } else if (param.status == 'TalkingEnd') {
+                console.log("语音结束");
+            } else if (param.status == 'CallEnd') {
+                console.log("通话结束");
+                var cdr = param.CDR;
+                $('.notice_call').html('通话已结束');
+                // var result = cdr.substring(1, 10);
+                // if (result == 'Succeeded') {
+                // }
+                ajaxSync(tabel_user_excel_id, cdr); //通话之后，通知后端这个号码已经拨打过，是否拨通和通话时间，从cdr里面获取
+                if (call_type === 'continue_call') {
+                    keyId = getCookie('continue_call_keyId');
+                    setTimeout(function () {
+                        CallContinue((parseInt(keyId) + 1));//800毫秒后自动拨打下一个
+                    }, 800);
+                }
+            }
+        }
+
+        //接收到话机信息查询的回调，注意message 和name，代表不同类型的查询
+        if (message == 'query' && name == 'Device') {
+            var param_busy = data.param;
+            var CurrentSim = param_busy.CurrentSim;
+            if (param_busy.DeviceBusy == 'busy') {
+                //切卡之后，每3秒查询一次话机状态，二十次之后，还是不对，直接报错
+                var tel_search_num = getCookie('tel_search_num');
+                if (!tel_search_num) {
+                    tel_search_num = 1;
+                }
+                if (parseInt(tel_search_num) >= 20) {
+                    $('.notice_call').html('卡槽【' + CurrentSim + '】，话机换卡重启失败，请刷新重试');
+                    addCookie('tel_search_num', 1);
+                } else {
+                    addCookie('tel_search_num', (parseInt(tel_search_num) + 1));
+                    $('.notice_call').html('换卡中');
+                    setTimeout(function () {
+                        searchstatus();//3秒后查询话机状态
+                    }, 3000);
+                }
+            }
+            if (param_busy.DeviceBusy == 'idle') {
+                $('.notice_call').html('卡槽【' + CurrentSim + '】空闲，开始拨号');
+                console.log('换卡完成，开始拨号');
+                addCookie('next_sim_num', 0);
+                if (call_type === 'continue_call') {
+                    keyId = getCookie('continue_call_keyId');
+                    CallContinue(keyId);
+                } else {
+                    var mobile = getCookie('personal_call_number');
+                    Call(mobile);
+                }
+            }
+        }
+
+        if (message == 'query' && name == 'Connect') {
+            var param_connect = data.param;
+            if (!param_connect) {
+                console.log('话机不在线');
+                $('.notice_call').html('话机不在线');
+                alert('未查询到电话机');
+                $('#tell_no_line').val(3);
+            } else {
+                $('#tell_no_line').val(2);
+                console.log('话机在线');
+            }
+        }
+    };
+
+    //发生错误
+    ws.onerror = function () {
+        console.log("error");
+    };
+
 
     function uploadFile() {
         ws.send(
@@ -171,7 +269,7 @@
                 action: 'Settings',
                 settings: {
                     upload: {
-                        api: 'http://tk.lianshuiweb.com/api/upload-file',//http://tk.lianshuiweb.com/api/upload-file
+                        api: '',//http://tk.lianshuiweb.com/api/upload-file
                         flag: 'token-1234-123',
                         file: '1',
                         qiniu: {
@@ -190,22 +288,24 @@
     function getWebsocket() {
         ws = new WebSocket('ws://127.0.0.1:8090/APP_2AD85C71-BEF8-463C-9B4B-B672F603542A_fast');
         ws.onerror = function (event) {
-            alert('初始化设备失败：' + event.data);
+            alert('驱动初始化失败：' + event.data);
         };
         ws.onclose = function (event) {
         };
         ws.onopen = function () {
-            console.log('初始化设备成功');
+            console.log('驱动初始化成功');
+            //设置设备8张卡
             ws.send(
                 JSON.stringify({
                     action: 'Settings',
                     settings: {
-                        SimTotal: 2
+                        SimTotal: 8
                     },
                     cb: new Date().getTime()
                 })
             );
 
+            //查询设备是否连接
             ws.send(JSON.stringify({
                 action: 'Query',
                 type: 'Connect',
@@ -214,47 +314,17 @@
         };
     }
 
-    //点击右侧列表，把信息传到表单
-    $('.user-info').click(function () {
-        var company_name = $(this).data('company_name');
-        var user_name = $(this).data('user_name');
-        var mobile = $(this).data('mobile');
-        var source = $(this).data('source');
-        $('.form-company-name').val(company_name);
-        $('.form-user-name').val(user_name);
-        $('.form-mobile').val(mobile);
-        $('.form-source').val(source);
+    function addCookie(name, value) {
+        localStorage.setItem(name, value);
+    }
 
-        var excel_user_id = $(this).data('id');
-        $('#excel-user_id').val(excel_user_id);
-    });
+    function delCookie(name) {
+        localStorage.removeItem(name);
+    }
 
-    //单独拨号
-    $('#call').click(function () {
-        var mobile = $('.form-mobile').val();
-        if (!mobile) {
-            alert('请先选择需要拨打的用户号码');
-        } else {
-            Call(mobile);
-        }
-    });
+    function getCookie(name) {
+        return localStorage.getItem(name);
+    }
 
-    //单独挂机
-    $('#hangup').click(function () {
-        hangup();
-    });
-
-    //连续拨号
-    $('#batch_call').click(function () {
-        $('#stop_continue_call').val('');
-        CallContinue(1);
-    });
-
-    //停止连续拨号
-    $('#batch_hangup').click(function () {
-        hangup();
-        $('.notice_call').html('已停止连续拨号');
-        $('#stop_continue_call').val(1);
-    });
 </script>
 

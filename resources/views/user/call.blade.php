@@ -29,6 +29,7 @@
                                             data-mobile={{ $val['mobile'] }}
                                             data-call_no={{ $val['call_no'] }}
                                             data-company_name={{ $val['company_name'] }}
+                                            data-source={{ $val['source'] }}
                                     >
                                 @else
                                     <li class=" user-info"
@@ -39,6 +40,7 @@
                                             data-mobile={{ $val['mobile'] }}
                                             data-call_no={{ $val['call_no'] }}
                                             data-company_name={{ $val['company_name'] }}
+                                            data-source={{ $val['source'] }}
                                     >
                                         @endif
                                         <input type="hidden" id="user-mobile-{{ $val['key_id'] }}"
@@ -157,6 +159,7 @@
     var callout_cb;
     init();
     function init() {
+        $('.content-header').remove();
         getWebsocket();
     }
 
@@ -204,19 +207,16 @@
     }
 
 
-
-
-
-
-
     //点击右侧列表，把信息传到表单
     $('.user-info').click(function () {
         var company_name = $(this).data('company_name');
         var user_name = $(this).data('user_name');
         var mobile = $(this).data('mobile');
+        var source = $(this).data('source');
         $('.form-company-name').val(company_name);
         $('.form-user-name').val(user_name);
         $('.form-mobile').val(mobile);
+        $('.form-source').val(source);
 
         var excel_user_id = $(this).data('id');
         $('#excel-user_id').val(excel_user_id);

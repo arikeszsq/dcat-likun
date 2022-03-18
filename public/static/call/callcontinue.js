@@ -44,9 +44,11 @@ function CallContinue(keyId) {
                         var company_name = $(id_name).parent().data('company_name');
                         var user_name = $(id_name).parent().data('user_name');
                         var mobile = $(id_name).parent().data('mobile');
+                        var source = $(id_name).parent().data('source');
                         $('.form-company-name').val(company_name);
                         $('.form-user-name').val(user_name);
                         $('.form-mobile').val(mobile);
+                        $('.form-source').val(source);
                         var excel_user_id = $(id_name).parent().data('id');
                         $('#excel-user_id').val(excel_user_id);
 

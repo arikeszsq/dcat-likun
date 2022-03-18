@@ -36,9 +36,11 @@ class ApiController extends AdminController
             $week_num = $setting->protect_week;
             $month_num = $setting->protect_month;
         }
-        $mobile_day = $mobile . '1';
-        $mobile_week = $mobile . '7';
-        $mobile_month = $mobile . '30';
+        $web_id = self::webId();
+
+        $mobile_day = $mobile . $web_id;
+        $mobile_week = $mobile . $web_id;
+        $mobile_month = $mobile . $web_id;
         $day_redis_num = intval(Redis::get($mobile_day));
         $week_redis_num = intval(Redis::get($mobile_week));
         $month_redis_num = intval(Redis::get($mobile_month));

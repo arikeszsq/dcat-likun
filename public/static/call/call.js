@@ -112,8 +112,8 @@ function Call(number) {
                             }
                             if (param_busy.DeviceBusy == 'idle') {
                                 $('.notice_call').html('卡槽【' + CurrentSim + '】设备状态空闲，开始拨号');
-                                console.log('卡槽【' + CurrentSim + '】设备状态空闲，可以拨号');
-                                console.log('换卡完成，开始拨号');
+                                console.log('calljs','卡槽【' + CurrentSim + '】设备状态空闲，可以拨号');
+                                console.log('calljs','换卡完成，开始拨号');
                                 addCookie('next_sim_num', 0);
                                 Call(number);
                             }
@@ -153,14 +153,14 @@ function Call(number) {
 
 function useNextSimAndCall() {
     //需要设备空闲的时候，才可以换卡
-    console.log('正在切换另一张卡，电话正在重启');
+    console.log('calljs','正在切换另一张卡，电话正在重启');
     $('.notice_call').html('正在切换另一张卡，电话正在重启，请稍等');
     useNextSim();
     setTimeout(function () {
         searchDevice();
     }, 1000);
     setTimeout(function () {
-        console.log('开始查询话机状态接口');
+        console.log('calljs','开始查询话机状态接口');
         searchstatus();
     }, 20000);
 }

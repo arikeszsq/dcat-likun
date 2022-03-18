@@ -67,7 +67,7 @@ class JfTalkLogController extends AdminController
             $show->field('user_name','姓名');
             $show->field('mobile','手机号');
             $show->field('talk_time','通话时长（秒）');
-            $show->field('record_url','录音文件地址')->link();
+            $show->field('record_url','录音文件地址');
             $show->field('created_at','通话时间');
             $show->field('updated_at','更新时间');
         });

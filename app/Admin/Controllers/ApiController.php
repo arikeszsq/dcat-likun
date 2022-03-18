@@ -169,7 +169,7 @@ class ApiController extends AdminController
                 $data = [
                     'mobile' => $mobile,
                     'talk_time' => $talk_time,
-                    'is_connect' => $talk_time == 0 ? 1 : 2,
+                    'is_connect' => $talk_time == 0 ? 2 : 1,
                     'updated_at' => date('Y-m-d H:i:s', time()),
                 ];
                 DB::table('jf_talk_log')->where('excel_user_id', $id)
@@ -184,7 +184,7 @@ class ApiController extends AdminController
                 $data = [
                     'mobile' => $mobile,
                     'talk_time' => $talk_time,
-                    'is_connect' => $talk_time == 0 ? 1 : 2,
+                    'is_connect' => $talk_time == 0 ? 2 : 1,
                     'updated_at' => date('Y-m-d H:i:s', time()),
                 ];
                 JfTalkLog::query()->where('table_id', $id)

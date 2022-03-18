@@ -27,16 +27,10 @@ class JfUserCallController extends Controller
             $valid_time = $setting->valid_phone;
             $next_num = $setting->next_num;
         } else {
-            $roll_time = 0;
+            $roll_time = 20;
             $valid_time = 10;
             $next_num = 20;
         }
-
-        $setting_data = [
-            'rolling_time' => $roll_time,
-            'valid_time' => $valid_time,
-            'next_num' => $next_num,
-        ];
 
         $web_id = static::webId();
         $user_id = static::userId();

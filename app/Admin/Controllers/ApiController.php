@@ -127,17 +127,32 @@ class ApiController extends AdminController
             $table_name = 'jf_user_excel';
         }
         $user = DB::table($table_name)->where('id', $id)->first();
-        $data = [
-            'web_id' => $web_id,
-            'user_id' => $user_id,
-            'company_name' => $user->company_name,
-            'user_name' => $user->user_name,
-            'mobile' => $user->mobile,
-            'created_at' => date('Y-m-d H:i:s', time()),
-            'table_id' => $id,
-            'table_name' => $table_name,
-            'record_url' => env('QINIU_YUMING') . '/' . $record . '.mp3'
-        ];
+        if ($user) {
+            $data = [
+                'web_id' => $web_id,
+                'user_id' => $user_id,
+                'company_name' => $user->company_name,
+                'user_name' => $user->user_name,
+                'mobile' => $user->mobile,
+                'created_at' => date('Y-m-d H:i:s', time()),
+                'table_id' => $id,
+                'table_name' => $table_name,
+                'record_url' => env('QINIU_YUMING') . '/' . $record . '.mp3'
+            ];
+        } else {
+            $data = [
+                'web_id' => $web_id,
+                'user_id' => $user_id,
+                'company_name' => '',
+                'user_name' => '',
+                'mobile' => '',
+                'created_at' => date('Y-m-d H:i:s', time()),
+                'table_id' => $id,
+                'table_name' => $table_name,
+                'record_url' => env('QINIU_YUMING') . '/' . $record . '.mp3'
+            ];
+        }
+
         DB::table('jf_talk_log')->insert($data);
     }
 
@@ -172,7 +187,7 @@ class ApiController extends AdminController
                     'is_connect' => $talk_time == 0 ? 2 : 1,
                     'updated_at' => date('Y-m-d H:i:s', time()),
                 ];
-                DB::table('jf_talk_log')->where('excel_user_id', $id)
+                DB::table('jf_talk_log')->where('table_id', $id)
                     ->where('table_name', $table_name)
                     ->orderBy('id', 'desc')
                     ->limit(1)
@@ -196,18 +211,20 @@ class ApiController extends AdminController
             if ($talk_time == 0) {
                 //导入资源里，未接通的电话，会挪动到未接通表
                 $user = JfUserExcel::query()->find($id);
-                $data = [
-                    'web_id' => $web_id,
-                    'user_id' => $user_id,
-                    'master_id' => $user_id,
-                    'user_name' => $user->user_name,
-                    'company_name' => $user->company_name,
-                    'mobile' => $user->mobile,
-                    'source' => $user->source,
-                    'created_at' => date('Y-m-d H:i:s', time())
-                ];
-                JfUserNoAnswer::query()->insert($data);
-                JfUserExcel::query()->where('id', $id)->delete();
+                if ($user) {
+                    $data = [
+                        'web_id' => $web_id,
+                        'user_id' => $user_id,
+                        'master_id' => $user_id,
+                        'user_name' => $user->user_name,
+                        'company_name' => $user->company_name,
+                        'mobile' => $user->mobile,
+                        'source' => $user->source,
+                        'created_at' => date('Y-m-d H:i:s', time())
+                    ];
+                    JfUserNoAnswer::query()->insert($data);
+                    JfUserExcel::query()->where('id', $id)->delete();
+                }
             } else {
                 //有通话时间的，如果未转入意向客户，就转入公海
                 $user = JfUserExcel::query()->find($id);

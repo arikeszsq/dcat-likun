@@ -35,12 +35,14 @@ class JfTalkLogController extends AdminController
             // 禁用创建按钮
             $grid->disableCreateButton();
 
+            $grid->column('company_name','公司名称');
             $grid->column('user_name','姓名');
 
 //            $grid->column('table_name');
 //            $grid->column('table_id');
 
             $grid->column('mobile','手机号');
+            $grid->column('is_connect','是否接通')->using([1 => '已接通', 2 => '未接通'])->label();
             $grid->column('talk_time','通话时长（秒）');
             $grid->column('created_at','通话时间');
 
@@ -65,7 +67,7 @@ class JfTalkLogController extends AdminController
             $show->field('user_name','姓名');
             $show->field('mobile','手机号');
             $show->field('talk_time','通话时长（秒）');
-            $show->field('record_url','录音文件地址');
+            $show->field('record_url','录音文件地址')->link();
             $show->field('created_at','通话时间');
             $show->field('updated_at','更新时间');
         });

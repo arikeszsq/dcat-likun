@@ -4,7 +4,12 @@ function CallContinue(keyId) {
     var i = 1;
     if (!number) {
         if (i < 200) {
-            CallContinue((keyId + 1));
+            var id_new_name = '#user-mobile-' + i;
+            var mobile = $(id_new_name).val();
+            if (mobile) {
+                CallContinue(i);
+                return false;
+            }
             i++;
         } else {
             $('.notice_call').html('全部号码已经拨打完成');

@@ -7,6 +7,15 @@ function Call(number) {
         success: function (res) {
             var code = res.msg_code;
             if (code === 100000) {
+
+                if ($('#tell_no_line').val() == 1 || $('#tell_no_line').val() == 3) {
+                    console.log('查询设备是否在线');
+                    searchDevice();
+                    if ($('#tell_no_line').val() == 3) {
+                        return false;
+                    }
+                }
+
                 //查询是否需要切卡
                 var rolling_time_set = $('#rolling_time').val();
                 var next_num_set = $('#next_num').val();
@@ -34,7 +43,7 @@ function Call(number) {
                     ws.send(JSON.stringify(action));
                     //收到服务端消息
                     ws.onmessage = function (event) {
-                        console.log(event.data);
+                        console.log('calljs', event.data);
                         var data = JSON.parse(event.data);
                         var message = data.message;
                         var name = data.name;
@@ -110,6 +119,18 @@ function Call(number) {
                             }
                         }
 
+                        if (message == 'query' && name == 'Connect') {
+                            var param_connect = data.param;
+                            if (!param_connect) {
+                                console.log('话机不在线');
+                                $('.notice_call').html('话机不在线');
+                                $('#tell_no_line').val(3);
+                            } else {
+                                $('#tell_no_line').val(2);
+                                console.log('话机在线');
+                            }
+                        }
+
                     };
                     //发生错误
                     ws.onerror = function () {
@@ -135,6 +156,9 @@ function useNextSimAndCall() {
     console.log('正在切换另一张卡，电话正在重启');
     $('.notice_call').html('正在切换另一张卡，电话正在重启，请稍等');
     useNextSim();
+    setTimeout(function () {
+        searchDevice();
+    }, 1000);
     setTimeout(function () {
         console.log('开始查询话机状态接口');
         searchstatus();

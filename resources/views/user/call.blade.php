@@ -96,6 +96,7 @@
                             <input type="hidden" id="rolling_time" value="{{$rolling_time}}">
                             <input type="hidden" id="valid_time" value="{{$valid_time}}">
                             <input type="hidden" id="next_num" value="{{$next_num}}">
+                            <input type="hidden" id="tell_no_line" value="1">
 
                             <input type="hidden" id="verify_mobile_can_call" value="1">
 
@@ -158,6 +159,7 @@
     //初始化设备
     var callout_cb;
     init();
+
     function init() {
         $('.content-header').remove();
         getWebsocket();
@@ -198,14 +200,19 @@
                 JSON.stringify({
                     action: 'Settings',
                     settings: {
-                        SimTotal: 8
+                        SimTotal: 2
                     },
                     cb: new Date().getTime()
                 })
             );
+
+            ws.send(JSON.stringify({
+                action: 'Query',
+                type: 'Connect',
+                cb: 'cb_data'
+            }));
         };
     }
-
 
     //点击右侧列表，把信息传到表单
     $('.user-info').click(function () {
@@ -249,18 +256,5 @@
         $('.notice_call').html('已停止连续拨号');
         $('#stop_continue_call').val(1);
     });
-
-    //主动切换下一张卡拨号
-    $('#next').click(function () {
-        ws.send(JSON.stringify({action: 'SimNext', cb: new Date().getTime()}));
-        ws.onmessage = function (event) {
-            console.log("message", event.data);
-        };
-        ws.onerror = function () {
-            console.log("error");
-        }
-    });
-
-
 </script>
 

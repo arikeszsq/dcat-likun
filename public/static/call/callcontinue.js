@@ -15,6 +15,15 @@ function CallContinue(keyId) {
             var code = res.msg_code;
             if (code === 100000) {
 
+                if ($('#tell_no_line').val() == 1 || $('#tell_no_line').val() == 3) {
+                    console.log('查询设备是否在线');
+                    searchDevice();
+                    if ($('#tell_no_line').val() == 3) {
+                        return false;
+                    }
+                }
+
+
                 //到了换卡次数之后，开始延迟等待话机重启后拨号
                 var next_num_set = $('#next_num').val();
                 var next_num = getCookie('next_sim_num');
@@ -61,7 +70,7 @@ function CallContinue(keyId) {
                         ws.send(JSON.stringify(action));
                         //收到服务端消息
                         ws.onmessage = function (event) {
-                            console.log(event.data);
+                            console.log('callcontinue', event.data);
                             var data = JSON.parse(event.data);
                             var message = data.message;
                             var name = data.name;
@@ -145,6 +154,19 @@ function CallContinue(keyId) {
                                     CallContinue((keyId + 1));
                                 }
                             }
+
+                            if (message == 'query' && name == 'Connect') {
+                                var param_connect = data.param;
+                                if (!param_connect) {
+                                    console.log('话机不在线');
+                                    $('.notice_call').html('话机不在线');
+                                    $('#tell_no_line').val(3);
+                                } else {
+                                    $('#tell_no_line').val(2);
+                                    console.log('话机在线');
+                                }
+                            }
+
                         };
                         //发生错误
                         ws.onerror = function () {
@@ -171,6 +193,11 @@ function useNextSimAndContinue() {
     $('.notice_call').html('正在切换另一张卡，电话正在重启，请稍等');
     //调用换卡接口
     useNextSim();
+
+    setTimeout(function () {
+        searchDevice();
+    }, 1000);
+
     //延迟5秒后调用查询话机状态接口
     setTimeout(function () {
         console.log('开始查询话机状态接口');

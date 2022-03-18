@@ -1,10 +1,16 @@
 function CallContinue(keyId) {
     var id_name = '#user-mobile-' + keyId;
     var number = $(id_name).val();
+    var i = 1;
     if (!number) {
-        $('.notice_call').html('全部号码已经拨打完成');
-        console.log('全部号码已经拨打完成');
-        return false;
+        if (i < 200) {
+            CallContinue((keyId + 1));
+            i++;
+        } else {
+            $('.notice_call').html('全部号码已经拨打完成');
+            console.log('全部号码已经拨打完成');
+            return false;
+        }
     }
     $.ajax({
         type: "POST",

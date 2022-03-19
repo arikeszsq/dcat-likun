@@ -357,3 +357,18 @@ textarea.gjkh_a:focus {
 .button-list .btn:nth-child(2n) {
     margin-right: 0;
 }
+
+
+@media screen and (max-width: 1440px) {
+    .container_sss .form-item {
+        margin: 1px 0;
+    }
+
+    .container_sss .form-item:nth-child(6) {
+        margin: 0px 0 5px;
+    }
+
+    .biaoqian_a {
+        margin-top: 5px;
+    }
+}

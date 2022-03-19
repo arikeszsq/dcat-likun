@@ -68,6 +68,15 @@
                 <div class="bddh_nr_nr">
                     <div class="container_zong">
                         <form class="container_sss">
+                            <div class="form-item" style="padding-bottom:8px;border-bottom: #0a6aa1 2px solid;">
+                                <span>切换批次数据:</span>
+                                <select class="form-control excel_batch_no_list">
+                                    <option value=""></option>
+                                    @foreach ($batch_array as $batch_no)
+                                        <option value="/admin/user-call?batch_no={{$batch_no}}">{{$batch_no}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <input type="hidden" id="excel-user_id">
                             <div class="form-item">
                                 <span>企业名称:</span>
@@ -166,6 +175,9 @@
         if (message == 'update' && name == 'Call') {
             var param = data.param;
             if (param.status == 'CallStart') {
+
+                addCookie('callstatus', 'iscalling');
+
                 //开始计时，到时间未接通直接挂断
                 addCookie('noanswer', 1);
                 var rolling_time_set = $('#rolling_time').val();
@@ -201,6 +213,7 @@
             } else if (param.status == 'CallEnd') {
                 console.log("通话结束");
                 var cdr = param.CDR;
+                addCookie('callstatus', 'callend');
                 $('.notice_call').html('通话已结束');
                 // var result = cdr.substring(1, 10);
                 // if (result == 'Succeeded') {

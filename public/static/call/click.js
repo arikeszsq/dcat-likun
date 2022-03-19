@@ -82,6 +82,19 @@ $('document').ready(function () {
         if (e.keyCode == 13) {
         }
     });
+
+    //选择不同批次号数据
+    $('.excel_batch_no_list').change(function () {
+        var url = $(this).val();
+        var callstatus = getCookie('callstatus');
+        if (callstatus === 'iscalling') {
+            alert('拨号中，请稍后重试');
+            return false;
+        }
+        if (url) {
+            window.location.href = url;
+        }
+    });
 });
 
 function yFlow(keyId) {

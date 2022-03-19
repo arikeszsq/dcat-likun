@@ -46,7 +46,7 @@ class ImportExcel extends Form
             $data[$i]['master_id'] = $user_id;
             $data[$i]['created_at'] = $create_time;
             $data[$i]['updated_at'] = $create_time;
-            $data[$i]['updated_at'] = $batch_no;
+            $data[$i]['batch_no'] = $batch_no;
             $i++;
         }
         try {

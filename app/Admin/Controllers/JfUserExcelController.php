@@ -40,6 +40,7 @@ class JfUserExcelController extends AdminController
             $grid->model()->orderBy('id', 'desc');
             $grid->column('id', __('Id'))->sortable();
 
+            $grid->column('batch_no', '批次号');
             $grid->column('user_name', '姓名');
             $grid->column('mobile', '手机号');
             $grid->column('company_name', '公司名称');

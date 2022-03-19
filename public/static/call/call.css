@@ -362,6 +362,7 @@ textarea.gjkh_a:focus {
 @media screen and (max-width: 1440px) {
     .container_sss .form-item {
         margin: 1px 0;
+        clear: both;
     }
 
     .container_sss .form-item:nth-child(6) {
@@ -370,5 +371,19 @@ textarea.gjkh_a:focus {
 
     .biaoqian_a {
         margin-top: 5px;
+    }
+
+    .container_sss .form-item span {
+        font-size: 12px;
+        margin-bottom: 0px;
+    }
+
+    .gjkh_a {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .button-list .btn {
+        margin-top: 2px;
     }
 }

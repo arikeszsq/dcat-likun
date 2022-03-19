@@ -211,6 +211,7 @@
             } else if (param.status == 'TalkingEnd') {
                 console.log("语音结束");
             } else if (param.status == 'CallEnd') {
+                addCookie('noanswer', 2);
                 console.log("通话结束");
                 var cdr = param.CDR;
                 addCookie('callstatus', 'callend');

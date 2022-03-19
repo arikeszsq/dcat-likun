@@ -16,7 +16,6 @@ function Call(number) {
 
     if (parseInt(next_num) >= parseInt(next_num_set)) {
         useNextSim();
-        return false;
     } else {
         $.ajax({
             type: "POST",

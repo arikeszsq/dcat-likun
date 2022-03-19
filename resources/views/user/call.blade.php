@@ -305,13 +305,20 @@
                 })
             );
 
-            //查询设备是否连接
-            ws.send(JSON.stringify({
-                action: 'Query',
-                type: 'Connect',
-                cb: 'cb_data'
-            }));
+            setTimeout(function () {
+                queryConnect();
+            }, 500);
+
         };
+    }
+
+    function queryConnect() {
+        //查询设备是否连接
+        ws.send(JSON.stringify({
+            action: 'Query',
+            type: 'Connect',
+            cb: 'cb_data'
+        }));
     }
 
     function addCookie(name, value) {

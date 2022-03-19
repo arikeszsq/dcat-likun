@@ -8,12 +8,19 @@
 <script src="/static/call/caller.js"></script>
 <script src="/static/call/click.js"></script>
 
+<style>
+    .div_list_body {
+        height: 700px;
+        overflow: scroll;
+        overflow-x: auto;
+    }
+</style>
 <div class="con_a_w">
     <div class="con_a">
         <div class="con_a_l">
             <div class="sj_nr">
                 <div class="sj_nr_bt">待呼叫资源</div>
-                <div class="sj_nr_nr">
+                <div class="sj_nr_nr div_list_body">
                     <div class="sj_nr_nr_bt">
                         <ul>
                             <li><span>公司名称</span><span>用户名</span><span>手机号</span><span>数据来源</span></li>
@@ -201,6 +208,7 @@
                 ajaxSync(tabel_user_excel_id, cdr); //通话之后，通知后端这个号码已经拨打过，是否拨通和通话时间，从cdr里面获取
                 if (call_type === 'continue_call') {
                     keyId = getCookie('continue_call_keyId');
+                    yFlow(keyId);
                     setTimeout(function () {
                         CallContinue((parseInt(keyId) + 1));//800毫秒后自动拨打下一个
                     }, 800);

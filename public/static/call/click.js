@@ -76,4 +76,16 @@ $('document').ready(function () {
         $('.notice_call').html('停止连续拨号');
         $('#stop_continue_call').val(1);
     });
+
+    //回车13 ，空格32
+    $(document).keydown(function (e) {
+        if (e.keyCode == 13) {
+        }
+    });
 });
+
+function yFlow(keyId) {
+    var clientHeight = $('div .sj_nr_nr_bt li').eq(1).height();
+    var scrollheight = keyId * clientHeight;
+    $('.div_list_body').scrollTop(scrollheight);
+}

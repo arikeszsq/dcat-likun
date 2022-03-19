@@ -57,7 +57,7 @@ class AssignUser extends Form
             ->get();
         $options = [];
         foreach ($users as $user) {
-            $options[$user->id] = $user->username;
+            $options[$user->id] = $user->username . '-' . $user->name;
         }
         $this->select('master_id', '用户')->options($options)->required();
 

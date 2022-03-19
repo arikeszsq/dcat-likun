@@ -162,7 +162,7 @@
     }
 
     ws.onmessage = function (event) {
-        console.log('服务器消息：', event.data);
+        console.log('callbackData：', event.data);
         var data = JSON.parse(event.data);
         var message = data.message;
         var name = data.name;
@@ -234,12 +234,12 @@
             var param_busy = data.param;
             var CurrentSim = param_busy.CurrentSim;
             if (param_busy.DeviceBusy == 'busy') {
-                //切卡之后，每3秒查询一次话机状态，二十次之后，还是不对，直接报错
+                //切卡之后，每3秒查询一次话机状态，40次之后，还是不对，直接报错
                 var tel_search_num = getCookie('tel_search_num');
                 if (!tel_search_num) {
                     tel_search_num = 1;
                 }
-                if (parseInt(tel_search_num) >= 20) {
+                if (parseInt(tel_search_num) >= 40) {
                     $('.notice_call').html('卡槽【' + CurrentSim + '】，话机换卡重启失败，请刷新重试');
                     addCookie('tel_search_num', 1);
                 } else {

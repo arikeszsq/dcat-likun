@@ -230,7 +230,7 @@
             }
         }
 
-        if (message == 'CallOut' && name == 'error') {
+        if (message == 'CallOut error:busy' && name == 'error') {
             console.log('呼出报错：查询话机状态');
             searchstatus();
         }

@@ -31,7 +31,7 @@ class ImportExcel extends Form
         // 取得总行数
         $highestRow = $sheet->getHighestRow();
         $data = [];
-        $batch_no = date('YmdHis', time());
+        $batch_no = $input['batch_no'];
         $create_time = date('Y-m-d H:i:s', time());
         $web_id = static::webId();
         $user_id = static::userId();
@@ -72,6 +72,7 @@ class ImportExcel extends Form
      */
     public function form()
     {
+        $this->text('batch_no', '导入命名')->required();
         $this->file('file', 'Excel文件')
             ->options(['showPreview' => false,
                 'allowedFileExtensions' => ['xlsx', 'xls'],

@@ -230,6 +230,11 @@
             }
         }
 
+        if (message == 'CallOut' && name == 'error') {
+            console.log('呼出报错：查询话机状态');
+            searchstatus();
+        }
+
         //接收到话机信息查询的回调，注意message 和name，代表不同类型的查询
         if (message == 'query' && name == 'Device') {
             var param_busy = data.param;
@@ -241,7 +246,7 @@
                     tel_search_num = 1;
                 }
                 if (parseInt(tel_search_num) >= 40) {
-                    $('.notice_call').html('卡槽【' + CurrentSim + '】，话机换卡重启失败，请刷新重试');
+                    $('.notice_call').html('话机忙，卡槽【' + CurrentSim + '】失败，刷新重试');
                     addCookie('tel_search_num', 1);
                 } else {
                     addCookie('tel_search_num', (parseInt(tel_search_num) + 1));
@@ -253,7 +258,7 @@
             }
             if (param_busy.DeviceBusy == 'idle') {
                 $('.notice_call').html('卡槽【' + CurrentSim + '】空闲，开始拨号');
-                console.log('换卡完成，开始拨号');
+                console.log('换卡成功，拨号中');
                 addCookie('next_sim_num', 0);
                 if (call_type === 'continue_call') {
                     keyId = getCookie('continue_call_keyId');

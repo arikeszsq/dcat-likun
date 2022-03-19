@@ -12,7 +12,7 @@ class TextActions extends Actions
      */
     protected function getViewLabel()
     {
-        $label = trans('admin.show') . '👁';
+        $label = trans('admin.show');
         return '<span class="text-success">' . $label . '</span> &nbsp;';
     }
 
@@ -21,7 +21,7 @@ class TextActions extends Actions
      */
     protected function getEditLabel()
     {
-        $label = trans('admin.edit') . '🖊';
+        $label = trans('admin.edit');
 
         return '<span class="text-primary">' . $label . '</span> &nbsp;';
     }
@@ -31,7 +31,7 @@ class TextActions extends Actions
      */
     protected function getQuickEditLabel()
     {
-        $label = trans('admin.edit') . '⚡';
+        $label = trans('admin.edit');
         $label2 = trans('admin.quick_edit');
 
         return '<span class="text-blue-darker" title="' . $label2 . '">' . $label . '</span> &nbsp;';
@@ -42,7 +42,7 @@ class TextActions extends Actions
      */
     protected function getDeleteLabel()
     {
-        $label = trans('admin.delete') . '♻';
+        $label = trans('admin.delete');
 
         return '<span class="text-danger">' . $label . '</span> &nbsp;';
     }

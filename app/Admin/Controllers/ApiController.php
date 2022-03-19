@@ -264,4 +264,80 @@ class ApiController extends AdminController
             return 0;
         }
     }
+
+    public function searchData(Request $request)
+    {
+        $inputs = $request->all();
+        $user_id = static::userId();
+        $web_id = static::webId();
+        $start_date = $inputs['start_date'];
+        $end_date = $inputs['end_date'];
+        if (!$start_date) {
+            $start_date = date('Y-m-d 00:00:01', time());
+        }
+        if (!$end_date) {
+            $end_date = date('Y-m-d 23:59:59', time());
+        }
+        if (strtotime($start_date) > strtotime($end_date)) {
+            return self::fail([
+                'code' => 3001,
+                'msg' => '开始日期不能大于结束日期'
+            ]);
+        }
+
+        $call_total = JfTalkLog::query()->where('user_id', $user_id)
+            ->where('created_at', '>', $start_date)
+            ->where('created_at', '<', $end_date)
+            ->count();
+
+        $talk_time = JfTalkLog::query()->where('user_id', $user_id)
+            ->where('created_at', '>', $start_date)
+            ->where('created_at', '<', $end_date)
+            ->sum('talk_time');
+
+        $new_intention = JfUserIntention::query()->where('user_id', $user_id)
+            ->where('created_at', '>', $start_date)
+            ->where('created_at', '<', $end_date)
+            ->count();
+
+        $no_num = JfTalkLog::query()->where('user_id', $user_id)
+            ->where('is_connect', 2)
+            ->where('created_at', '>', $start_date)
+            ->where('created_at', '<', $end_date)
+            ->count();
+
+        $get_num = JfTalkLog::query()->where('user_id', $user_id)
+            ->where('is_connect', 1)
+            ->where('created_at', '>', $start_date)
+            ->where('created_at', '<', $end_date)
+            ->count();
+
+        $setting = WebSetting::getSetting();
+        $valid_time = isset($setting->valid_phone) && $setting->valid_phone ? $setting->valid_phone : 3;
+
+        $valid_num = JfTalkLog::query()->where('user_id', $user_id)
+            ->where('talk_time', '>=',$valid_time)
+            ->where('created_at', '>', $start_date)
+            ->where('created_at', '<', $end_date)
+            ->count();
+
+        $valid_long = JfTalkLog::query()->where('user_id', $user_id)
+            ->where('talk_time', '>=',$valid_time)
+            ->where('created_at', '>', $start_date)
+            ->where('created_at', '<', $end_date)
+            ->sum('talk_time');
+
+        return self::success([
+            'call_total' => $call_total,
+            'talk_time' => $talk_time,
+            'new_intention' => $new_intention,
+            'no_num' => $no_num,
+            'get_num' => $get_num,
+            'valid_num' => $valid_num,
+            'valid_long' => $valid_long,
+            'start_date'=>date('Y-m-d',strtotime($start_date)),
+            'end_date'=>date('Y-m-d',strtotime($end_date))
+        ]);
+
+    }
 }

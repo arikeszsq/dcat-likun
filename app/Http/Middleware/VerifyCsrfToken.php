@@ -20,5 +20,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'wechat', 'admin/add-intention', 'admin/call-back', 'admin/add-call-record', 'admin/verify-mobile'
+        , 'admin/search-data'
     ];
 }

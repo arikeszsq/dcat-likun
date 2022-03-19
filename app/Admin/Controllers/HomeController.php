@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Metrics\Call\NewIntention;
 use App\Admin\Metrics\Examples;
 use App\Http\Controllers\Controller;
 use Dcat\Admin\Http\Controllers\Dashboard;
@@ -13,7 +14,9 @@ class HomeController extends Controller
 {
     public function index(Content $content)
     {
-        return $content->body('<h2 style="text-align: center;margin: 100px auto;">欢迎来到管理中心</h2>');
+//        return $content->body('<h2 style="text-align: center;margin: 100px auto;">欢迎来到管理中心</h2>');
+
+        return $content->body(view('user.analysis'));
 
 //        return $content
 //            ->header('Dashboard')

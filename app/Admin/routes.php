@@ -62,5 +62,7 @@ Route::group([
     Route::any('/add-call-record', 'ApiController@addUserCallRecord');
     /** 验证手机号是否在保护期 **/
     Route::any('/verify-mobile', 'ApiController@verifyMobile');
+    /** 查询数据 **/
+    Route::any('/search-data', 'ApiController@searchData');
 
 });

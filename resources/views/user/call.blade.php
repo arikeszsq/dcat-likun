@@ -156,6 +156,7 @@
     init();
 
     function init() {
+        addCookie('continue_call_keyId', 1);
         $('.content-header').remove();
         //初始化驱动，查询电话机是否连接
         getWebsocket();

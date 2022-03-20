@@ -301,10 +301,10 @@
                         flag: 'token-1234-123',
                         file: '1',
                         qiniu: {
-                            AccessKey: 'Bz7rahQAQVdmp-6wYw50zNKO2JPh52fIUrNCtwjq',
-                            SecretKey: 'Pj_qaxfs9earPgwiiE_ys3OaFvB3xKunwgcYrieD',
+                            AccessKey: 'ixjWEWuyjcCCH9owo3m9ycOx5iwWsmsf3RvjMNeY',
+                            SecretKey: 'cTPFzWUF03LklDhOCr4uVxsl_QHuZbxnVMcxpiwg',
                             Zone: 'Zone_z0',//华东
-                            Bucket: '123456adsf'
+                            Bucket: 'recordingjufu'
                         }
                     }
                 },

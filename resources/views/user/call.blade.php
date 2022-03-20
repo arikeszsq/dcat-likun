@@ -211,6 +211,7 @@
                 addCookie('noanswer', 2);
             } else if (param.status == 'TalkingEnd') {
                 console.log("语音结束");
+                addCookie('noanswer', 2);
             } else if (param.status == 'CallEnd') {
                 addCookie('noanswer', 2);
                 console.log("通话结束");
